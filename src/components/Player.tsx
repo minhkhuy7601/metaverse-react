@@ -9,9 +9,12 @@ const Player: React.FC<PlayerType> = ({ x, y }) => {
           y * CELL_SIZE
         }px)`,
         width: `${CELL_SIZE}px`,
-        height: `${CELL_SIZE}px`,
+        height: `${CELL_SIZE + 5}px`,
+        backgroundSize: "320px",
+        backgroundPositionY: "-4px",
+        // backgroundPositionX: "-23px",
       }}
-      className="absolute top-0 left-0 bg-white duration-300"></div>
+      className="absolute top-0  left-0 duration-300 bg-[url('@/assets/characters/characters.png')]"></div>
   );
 };
 
