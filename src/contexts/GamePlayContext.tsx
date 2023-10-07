@@ -46,11 +46,11 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     new KeyPressListener("ArrowDown", () => handleArrowPress(0, 1));
     new KeyPressListener("ArrowLeft", () => handleArrowPress(-1, 0));
     new KeyPressListener("ArrowRight", () => handleArrowPress(1, 0));
-    // initHandleMoveOnClick(
-    //   CLASS_MAP,
-    //   listPlayersRef.current[playerIdRef.current],
-    //   (x, y) => handleArrowPress(x, y)
-    // );
+    initHandleMoveOnClick(
+      CLASS_MAP,
+      listPlayersRef.current[playerIdRef.current],
+      (x, y) => handleArrowPress(x, y)
+    );
   }
 
   function initGame() {
