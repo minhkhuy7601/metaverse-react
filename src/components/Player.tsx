@@ -8,8 +8,10 @@ const Player: React.FC<PlayerType> = ({ x, y }) => {
         transform: `translateX(${x * CELL_SIZE}px) translateY(${
           y * CELL_SIZE
         }px)`,
+        width: `${CELL_SIZE}px`,
+        height: `${CELL_SIZE}px`,
       }}
-      className="absolute top-0 left-0 w-[30px] h-[30px] bg-white duration-300"></div>
+      className="absolute top-0 left-0 bg-white duration-300"></div>
   );
 };
 

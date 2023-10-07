@@ -4,16 +4,18 @@ import GridTemplate from "./GridTemplate";
 import PlayersList from "./PlayersList";
 const GameContainer = () => {
   return (
-    <div
-      style={{
-        width: `${COLS * CELL_SIZE}px`,
-        height: `${ROWS * CELL_SIZE}px`,
-      }}
-      className={classNames(
-        "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[url('@/assets/maps/metaverse_class.png')] bg-no-repeat bg-center bg-cover"
-      )}>
-      <GridTemplate />
-      <PlayersList />
+    <div className="w-screen h-screen relative top-0 flex justify-center items-center">
+      <div
+        style={{
+          width: `${COLS * CELL_SIZE}px`,
+          height: `${ROWS * CELL_SIZE}px`,
+        }}
+        className={classNames(
+          "bg-[url('@/assets/maps/metaverse_class.png')] bg-no-repeat bg-center bg-cover relative"
+        )}>
+        <GridTemplate />
+        <PlayersList />
+      </div>
     </div>
   );
 };

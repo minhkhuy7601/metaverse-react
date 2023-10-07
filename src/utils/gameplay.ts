@@ -1,7 +1,9 @@
-import { CELL_SIZE } from "@/constant/config";
+import { CELL_SIZE, COLS, ROWS } from "@/constant/config";
 
 export function isSolid(grid: number[][], x: number, y: number) {
-  const blockedNextSpace = !!grid[y][x];
+  console.log("xy", { x, y });
+  const blockedNextSpace =
+    x < 0 || y < 0 || y >= ROWS || x >= COLS || !!grid[y][x];
   return blockedNextSpace;
 }
 
