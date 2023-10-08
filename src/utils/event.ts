@@ -1,42 +1,42 @@
 export class KeyPressListener {
-	private keySafe: boolean = true;
-	private keyCode: string;
-	private callback: () => void;
-	private time: number | null | NodeJS.Timeout = null;
+  private keySafe: boolean = true;
+  private keyCode: string;
+  private callback: () => void;
+  private time: number | null | NodeJS.Timeout = null;
 
-	constructor(keyCode: string, callback: () => void) {
-		this.keyCode = keyCode;
-		this.callback = callback;
+  constructor(keyCode: string, callback: () => void) {
+    this.keyCode = keyCode;
+    this.callback = callback;
 
-		this.keydownFunction = this.keydownFunction.bind(this);
-		this.keyupFunction = this.keyupFunction.bind(this);
+    this.keydownFunction = this.keydownFunction.bind(this);
+    this.keyupFunction = this.keyupFunction.bind(this);
 
-		document.addEventListener("keydown", this.keydownFunction);
-		document.addEventListener("keyup", this.keyupFunction);
-	}
+    document.addEventListener("keydown", this.keydownFunction);
+    document.addEventListener("keyup", this.keyupFunction);
+  }
 
-	private keydownFunction(event: KeyboardEvent): void {
-		// if (this.time) clearInterval(this.time);
-		if (event.code === this.keyCode) {
-			if (this.keySafe) {
-				this.keySafe = false;
-				this.callback();
-				this.time = setInterval(() => {
-					this.callback();
-				}, 100);
-			}
-		}
-	}
+  private keydownFunction(event: KeyboardEvent): void {
+    // if (this.time) clearInterval(this.time);
+    if (event.code === this.keyCode) {
+      if (this.keySafe) {
+        this.keySafe = false;
+        this.callback();
+        this.time = setInterval(() => {
+          this.callback();
+        }, 180);
+      }
+    }
+  }
 
-	private keyupFunction(event: KeyboardEvent): void {
-		if (event.code === this.keyCode) {
-			if (this.time) clearInterval(this.time);
-			this.keySafe = true;
-		}
-	}
+  private keyupFunction(event: KeyboardEvent): void {
+    if (event.code === this.keyCode) {
+      if (this.time) clearInterval(this.time);
+      this.keySafe = true;
+    }
+  }
 
-	public unbind(): void {
-		document.removeEventListener("keydown", this.keydownFunction);
-		document.removeEventListener("keyup", this.keyupFunction);
-	}
+  public unbind(): void {
+    document.removeEventListener("keydown", this.keydownFunction);
+    document.removeEventListener("keyup", this.keyupFunction);
+  }
 }

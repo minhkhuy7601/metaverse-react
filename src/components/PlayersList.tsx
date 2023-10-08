@@ -19,6 +19,7 @@ const PlayersList = () => {
           x={item.x}
           y={item.y}
           name={item.name}
+          state={item.state}
           color={item.color}
           direction={item.direction}
         />

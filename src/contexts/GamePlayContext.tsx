@@ -28,15 +28,28 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     const newY = listPlayersRef.current[playerId].y + yChange;
 
     if (!isSolid(CLASS_MAP, newX, newY)) {
-      //move to the next space
       listPlayersRef.current[playerId].x = newX;
       listPlayersRef.current[playerId].y = newY;
-      //   if (xChange === 1) {
-      //     players[playerId].direction = "right";
-      //   }
-      //   if (xChange === -1) {
-      //     players[playerId].direction = "left";
-      //   }
+      let currentState = listPlayersRef.current[playerId].state;
+      if (currentState === 3) {
+        currentState = 1;
+      } else {
+        currentState++;
+      }
+      listPlayersRef.current[playerId].state = currentState;
+      if (xChange === 1) {
+        listPlayersRef.current[playerId].direction = "right";
+      }
+      if (xChange === -1) {
+        listPlayersRef.current[playerId].direction = "left";
+      }
+      if (yChange === 1) {
+        listPlayersRef.current[playerId].direction = "bottom";
+      }
+      if (yChange === -1) {
+        listPlayersRef.current[playerId].direction = "top";
+      }
+
       set(playerRef.current, listPlayersRef.current[playerId]);
       return true;
     } else {
@@ -129,7 +142,8 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
         set(refPlayerFirebase, {
           id: uid,
           name: "test",
-          direction: "right",
+          direction: "down",
+          state: 1,
           color: "red",
           x: 16,
           y: 6,

@@ -4,6 +4,7 @@ export interface PlayerType {
   direction: string;
   color: string;
   x: number;
+  state: number;
   y: number;
 }
 
