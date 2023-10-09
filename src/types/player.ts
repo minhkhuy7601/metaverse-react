@@ -1,3 +1,5 @@
+import { MapType } from "./map";
+
 export interface PlayerType {
   id: string;
   name: string;
@@ -14,4 +16,5 @@ export interface GamePlayContextProps {
   playerRef: any; // Type accordingly to your Firebase database reference
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   players: any;
+  currentRoom: MapType;
 }

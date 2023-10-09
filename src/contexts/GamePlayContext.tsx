@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CLASS_MAP } from "@/constant/maps/class";
+import { CONFIG_MAP } from "@/constant/config";
 import { auth, db } from "@/lib/firebase";
+import { MapType } from "@/types/map";
 import { GamePlayContextProps } from "@/types/player";
 import { astar } from "@/utils/automove";
 import { KeyPressListener } from "@/utils/event";
-import { getGridCoordinates, isSolid } from "@/utils/gameplay";
+import { getGridCoordinates, isPerformAction, isSolid } from "@/utils/gameplay";
 import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { onDisconnect, onValue, ref, set } from "firebase/database";
 import { ReactNode, createContext, useEffect, useRef, useState } from "react";
@@ -16,8 +17,34 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
   const playerIdRef = useRef<string | null>(null);
   const playerRef = useRef<any>(null);
   const listPlayersRef = useRef<any>(null);
+  const [currentRoom, setCurrentRoom] = useState<MapType>(CONFIG_MAP["lobby"]);
   const [players, setPlayers] = useState<Record<string, any>>({});
+  function handleActionPlayer(type: string, value: any) {
+    switch (type) {
+      case "CHANGE_ROOM": {
+        setCurrentRoom(CONFIG_MAP[value?.name]);
+        handleSetPositionPlayerCurrent(
+          value.resetPosition.x,
+          value.resetPosition.y
+        );
+        break;
+      }
+      case "POP_UP_QUESTION": {
+        console.log(type, value);
+        break;
+      }
 
+      default:
+        break;
+    }
+  }
+  function handleSetPositionPlayerCurrent(x: number, y: number) {
+    const playerId = playerIdRef.current;
+    if (!playerId) return;
+    listPlayersRef.current[playerId].x = x;
+    listPlayersRef.current[playerId].y = y;
+    set(playerRef.current, listPlayersRef.current[playerId]);
+  }
   function handleArrowPress(xChange = 0, yChange = 0) {
     const playerId = playerIdRef.current;
 
@@ -27,7 +54,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     const newX = listPlayersRef.current[playerId].x + xChange;
     const newY = listPlayersRef.current[playerId].y + yChange;
 
-    if (!isSolid(CLASS_MAP, newX, newY)) {
+    if (!isSolid(currentRoom.map, newX, newY)) {
       listPlayersRef.current[playerId].x = newX;
       listPlayersRef.current[playerId].y = newY;
       let currentState = listPlayersRef.current[playerId].state;
@@ -51,6 +78,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       }
 
       set(playerRef.current, listPlayersRef.current[playerId]);
+      isPerformAction(currentRoom, newX, newY, handleActionPlayer);
       return true;
     } else {
       return false;
@@ -62,6 +90,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     new KeyPressListener("ArrowDown", () => handleArrowPress(0, 1));
     new KeyPressListener("ArrowLeft", () => handleArrowPress(-1, 0));
     new KeyPressListener("ArrowRight", () => handleArrowPress(1, 0));
+    // initHandleMoveOnClick();
   }
 
   function initHandleMoveOnClick() {
@@ -76,17 +105,17 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       if (!playerId) return;
       try {
         const { x, y } = getGridCoordinates(event.pageX, event.pageY, rect);
-        // console.log("x, y", x, y);
-        // console.log(
-        //   "listPlayersRef.current[playerId].x,",
-        //   listPlayersRef.current[playerId].x
-        // );
-        // console.log(
-        //   "listPlayersRef.current[playerId].y,",
-        //   listPlayersRef.current[playerId].y
-        // );
+        console.log("x, y", x, y);
+        console.log(
+          "listPlayersRef.current[playerId].x,",
+          listPlayersRef.current[playerId].x
+        );
+        console.log(
+          "listPlayersRef.current[playerId].y,",
+          listPlayersRef.current[playerId].y
+        );
         const race = await astar(
-          CLASS_MAP,
+          currentRoom.map,
           [
             listPlayersRef.current[playerId].x,
             listPlayersRef.current[playerId].y,
@@ -140,8 +169,9 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
         playerIdRef.current = uid;
         playerRef.current = refPlayerFirebase;
         set(refPlayerFirebase, {
+          roomId: 1,
           id: uid,
-          name: "test",
+          name: "neo",
           direction: "down",
           state: 1,
           color: "red",
@@ -167,6 +197,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     playerId: playerIdRef.current,
     playerRef,
     players,
+    currentRoom,
   };
 
   return (

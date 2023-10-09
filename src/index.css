@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes character {
+  0% {
+    background-position-x: "3px";
+  }
+  33% {
+    background-position-x: "-23px";
+  }
+  66% {
+    background-position-x: "-43px";
+  }
+}

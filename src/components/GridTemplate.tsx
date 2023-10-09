@@ -1,47 +1,47 @@
 import { COLS } from "@/constant/config";
 import { CLASS_MAP } from "@/constant/maps/class";
+import { useGamePlayContext } from "@/hooks/useGamePlayContext";
 import classNames from "classnames";
 import { useState } from "react";
 
-const template = CLASS_MAP;
-
 const GridTemplate = () => {
-  const [renderMap, setRenderMap] = useState(() => {
-    const temp = [];
+  const { currentRoom } = useGamePlayContext();
+  const [renderMap] = useState(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const temp: Array<{ x: number; y: number; value: any }> = [];
     CLASS_MAP.forEach((i, index) =>
       i.forEach((item, j) => temp.push({ x: index, y: j, value: item }))
     );
     return temp;
   });
 
-  console.log("renderMap", renderMap);
-  console.log("template", template);
-
   return (
     <div
       style={{
         gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`,
       }}
-      className="absolute inset-0 grid ">
+      className="absolute inset-0 grid bg-sky-400/50 bg-green-400/50 bg-transparent">
       {renderMap?.map((item, index) => (
         <div
-          onClick={() => {
-            console.log("item", item);
-            const newMap = JSON.parse(JSON.stringify(renderMap));
-            if (newMap[index].value === 1) {
-              newMap[index].value = 0;
-              template[item.x][item.y] = 0;
-            } else {
-              newMap[index].value = 1;
-              template[item.x][item.y] = 1;
-            }
+          // onClick={() => {
+          //   console.log("item", item);
+          //   const newMap = JSON.parse(JSON.stringify(renderMap));
+          //   if (newMap[index].value === 1) {
+          //     newMap[index].value = 0;
+          //     template[item.x][item.y] = 0;
+          //   } else {
+          //     newMap[index].value = 1;
+          //     template[item.x][item.y] = 1;
+          //   }
 
-            setRenderMap(newMap);
-          }}
+          //   setRenderMap(newMap);
+          // }}
           key={index}
           className={classNames(
             "aspect-square outline outline-1 outline-white/30",
-            item.value === 1 && "bg-red-600/50"
+            item.value === 1 && "bg-red-600/50",
+            currentRoom.actions?.[`${item.x},${item.y}`] &&
+              currentRoom.actions?.[`${item.x},${item.y}`].image
           )}></div>
       ))}
     </div>

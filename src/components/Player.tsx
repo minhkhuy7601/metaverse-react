@@ -40,16 +40,14 @@ const Player: React.FC<PlayerType> = ({ x, y, direction, state, name }) => {
         width: `${CELL_SIZE}px`,
         height: `${CELL_SIZE + 5}px`,
       }}
-      className="absolute top-0 left-0 duration-300"
-    >
+      className="absolute top-0 left-0 duration-300">
       <div
         style={{
           backgroundSize: "320px",
           backgroundPositionY: directionStyle,
           backgroundPositionX: stateStyle,
         }}
-        className="absolute top-0 left-0 w-full h-full bg-[url('@/assets/characters/characters.png')]"
-      ></div>
+        className="absolute top-0 left-0 w-full h-full bg-[url('@/assets/characters/characters.png')]"></div>
       {/* name */}
       <p className="absolute -top-1 -translate-y-full left-1/2 font-bold -translate-x-1/2 bg-gray-800/50 text-white px-2 py-0.1 rounded-lg">
         {name}
