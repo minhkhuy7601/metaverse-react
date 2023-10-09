@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CONFIG_MAP } from "@/constant/config";
 import { auth, db } from "@/lib/firebase";
+import { setLoading } from "@/redux/slices/mapSlice";
 import { MapType } from "@/types/map";
 import { GamePlayContextProps } from "@/types/player";
 import { astar } from "@/utils/automove";
@@ -9,24 +10,38 @@ import { getGridCoordinates, isPerformAction, isSolid } from "@/utils/gameplay";
 import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { onDisconnect, onValue, ref, set } from "firebase/database";
 import { ReactNode, createContext, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 export const GamePlayContext = createContext<GamePlayContextProps | undefined>(
   undefined
 );
 
 export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
+  const dispatch = useDispatch();
   const playerIdRef = useRef<string | null>(null);
   const playerRef = useRef<any>(null);
   const listPlayersRef = useRef<any>(null);
   const [currentRoom, setCurrentRoom] = useState<MapType>(CONFIG_MAP["lobby"]);
   const [players, setPlayers] = useState<Record<string, any>>({});
-  function handleActionPlayer(type: string, value: any) {
+  async function handleActionPlayer(type: string, value: any) {
+    console.log(type);
     switch (type) {
       case "CHANGE_ROOM": {
-        setCurrentRoom(CONFIG_MAP[value?.name]);
-        handleSetPositionPlayerCurrent(
-          value.resetPosition.x,
-          value.resetPosition.y
-        );
+        dispatch(setLoading(true));
+        new Promise<void>((resolve) => {
+          setTimeout(() => {
+            handleSetPositionPlayerCurrent(
+              value.resetPosition.x,
+              value.resetPosition.y
+            );
+            setCurrentRoom(CONFIG_MAP[value?.name]);
+            resolve();
+          }, 600);
+        }).then(() => {
+          setTimeout(() => {
+            dispatch(setLoading(false));
+          }, 200);
+        });
+
         break;
       }
       case "POP_UP_QUESTION": {
@@ -78,6 +93,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       }
 
       set(playerRef.current, listPlayersRef.current[playerId]);
+
       isPerformAction(currentRoom, newX, newY, handleActionPlayer);
       return true;
     } else {
@@ -85,14 +101,29 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  function initEventListener() {
-    new KeyPressListener("ArrowUp", () => handleArrowPress(0, -1));
-    new KeyPressListener("ArrowDown", () => handleArrowPress(0, 1));
-    new KeyPressListener("ArrowLeft", () => handleArrowPress(-1, 0));
-    new KeyPressListener("ArrowRight", () => handleArrowPress(1, 0));
-    // initHandleMoveOnClick();
-  }
-
+  useEffect(() => {
+    // initEventListener();
+    const ArrowUp = new KeyPressListener("ArrowUp", () =>
+      handleArrowPress(0, -1)
+    );
+    const ArrowDown = new KeyPressListener("ArrowDown", () =>
+      handleArrowPress(0, 1)
+    );
+    const ArrowLeft = new KeyPressListener("ArrowLeft", () =>
+      handleArrowPress(-1, 0)
+    );
+    const ArrowRight = new KeyPressListener("ArrowRight", () =>
+      handleArrowPress(1, 0)
+    );
+    return () => {
+      console.log("unbind");
+      ArrowUp.unbind();
+      ArrowDown.unbind();
+      ArrowLeft.unbind();
+      ArrowRight.unbind();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRoom.id]);
   function initHandleMoveOnClick() {
     const gameContainer = document.querySelector("#game-container");
     if (!gameContainer) return;
@@ -147,7 +178,6 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
   }
 
   function initGame() {
-    initEventListener();
     const allPlayersRef = ref(db, `players`);
     onValue(allPlayersRef, (snapshot) => {
       //   console.log("snapshot", snapshot);
@@ -179,7 +209,6 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
           y: 6,
         });
         onDisconnect(refPlayerFirebase).remove();
-        initGame();
       } else {
         console.log("user is logged out");
       }
@@ -190,6 +219,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       .catch((error) => {
         console.log("error", error);
       });
+    initGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

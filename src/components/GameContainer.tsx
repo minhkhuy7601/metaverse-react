@@ -1,13 +1,21 @@
 import { CELL_SIZE } from "@/constant/config";
 import { useGamePlayContext } from "@/hooks/useGamePlayContext";
+import { RootState } from "@/redux/store";
 import classNames from "classnames";
+import { useSelector } from "react-redux";
 import GridTemplate from "./GridTemplate";
 import PlayersList from "./PlayersList";
 const GameContainer = () => {
   const { currentRoom } = useGamePlayContext();
-  console.log("currentRoom", currentRoom);
+  const isLoading = useSelector((state: RootState) => state.map.isLoading);
+  // console.log("currentRoom", currentRoom);
+
   return (
-    <div className="w-screen h-screen relative top-0 flex justify-center items-center">
+    <div
+      className={classNames(
+        "w-screen h-screen relative top-0 flex justify-center items-center duration-500",
+        isLoading ? "invisible opacity-0" : "visible opacity-100"
+      )}>
       <div
         id="game-container"
         style={{

@@ -38,11 +38,19 @@ const GridTemplate = () => {
           // }}
           key={index}
           className={classNames(
-            "aspect-square outline outline-1 outline-white/30",
-            item.value === 1 && "bg-red-600/50",
-            currentRoom.actions?.[`${item.x},${item.y}`] &&
-              currentRoom.actions?.[`${item.x},${item.y}`].image
-          )}></div>
+            "aspect-square"
+            // "outline outline-1 outline-white/30",
+            // item.value === 1 && "bg-red-600/50"
+          )}>
+          {currentRoom.actions?.[`${item.y},${item.x}`] && (
+            <img
+              id={currentRoom.actions?.[`${item.y},${item.x}`].id}
+              src={currentRoom.actions?.[`${item.y},${item.x}`].image}
+              className="w-full h-full"
+              alt="alt"
+            />
+          )}
+        </div>
       ))}
     </div>
   );

@@ -36,6 +36,8 @@ export class KeyPressListener {
   }
 
   public unbind(): void {
+    if (this.time) clearInterval(this.time);
+
     document.removeEventListener("keydown", this.keydownFunction);
     document.removeEventListener("keyup", this.keyupFunction);
   }

@@ -13,3 +13,6 @@
     background-position-x: "-43px";
   }
 }
+.near {
+  box-shadow: 0 0 5px 1px yellow;
+}

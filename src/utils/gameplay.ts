@@ -14,13 +14,28 @@ export function isPerformAction(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   callback: (type: string, value: any) => void
 ) {
-  const action = currentMap?.actions?.[`${y},${x}`];
-
-  console.log("action", currentMap?.actions);
+  const nearsRemove = document.querySelectorAll(".near");
+  console.log(nearsRemove);
+  if (nearsRemove) nearsRemove.forEach((e) => e?.classList.remove("near"));
+  const action = currentMap?.actions?.[`${x},${y}`];
+  const nearId1 = currentMap?.actions?.[`${x},${y + 1}`]?.id;
+  const nearId2 = currentMap?.actions?.[`${x},${y - 1}`]?.id;
+  const nearId3 = currentMap?.actions?.[`${x + 1},${y}`]?.id;
+  const nearId4 = currentMap?.actions?.[`${x - 1},${y}`]?.id;
+  addNearClass(nearId1);
+  addNearClass(nearId2);
+  addNearClass(nearId3);
+  addNearClass(nearId4);
   if (action) {
     callback(action.type, action.value);
   }
 }
+const addNearClass = (nearId: string) => {
+  if (nearId) {
+    const nearElement = document.querySelector(`#${nearId}`);
+    nearElement?.classList.add("near");
+  }
+};
 
 export function getGridCoordinates(
   clientX: number,
