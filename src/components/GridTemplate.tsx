@@ -5,55 +5,59 @@ import classNames from "classnames";
 import { useState } from "react";
 
 const GridTemplate = () => {
-  const { currentRoom } = useGamePlayContext();
-  const [renderMap] = useState(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const temp: Array<{ x: number; y: number; value: any }> = [];
-    CLASS_MAP.forEach((i, index) =>
-      i.forEach((item, j) => temp.push({ x: index, y: j, value: item }))
-    );
-    return temp;
-  });
+	const { currentRoom } = useGamePlayContext();
+	const [renderMap] = useState(() => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const temp: Array<{ x: number; y: number; value: any }> = [];
+		CLASS_MAP.forEach((i, index) =>
+			i.forEach((item, j) => temp.push({ x: index, y: j, value: item }))
+		);
+		return temp;
+	});
 
-  return (
-    <div
-      style={{
-        gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`,
-      }}
-      className="absolute inset-0 grid bg-sky-400/50 bg-green-400/50 bg-transparent">
-      {renderMap?.map((item, index) => (
-        <div
-          // onClick={() => {
-          //   console.log("item", item);
-          //   const newMap = JSON.parse(JSON.stringify(renderMap));
-          //   if (newMap[index].value === 1) {
-          //     newMap[index].value = 0;
-          //     template[item.x][item.y] = 0;
-          //   } else {
-          //     newMap[index].value = 1;
-          //     template[item.x][item.y] = 1;
-          //   }
+	return (
+		<div
+			style={{
+				gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`,
+			}}
+			className="absolute inset-0 grid">
+			{renderMap?.map((item, index) => (
+				<div
+					// onClick={() => {
+					// 	console.log("item", item);
+					// 	const newMap = JSON.parse(JSON.stringify(renderMap));
+					// 	if (newMap[index].value === 1) {
+					// 		newMap[index].value = 0;
+					// 		currentRoom.map[item.x][item.y] = 0;
+					// 	} else {
+					// 		newMap[index].value = 1;
+					// 		currentRoom.map[item.x][item.y] = 1;
+					// 	}
 
-          //   setRenderMap(newMap);
-          // }}
-          key={index}
-          className={classNames(
-            "aspect-square"
-            // "outline outline-1 outline-white/30",
-            // item.value === 1 && "bg-red-600/50"
-          )}>
-          {currentRoom.actions?.[`${item.y},${item.x}`] && (
-            <img
-              id={currentRoom.actions?.[`${item.y},${item.x}`].id}
-              src={currentRoom.actions?.[`${item.y},${item.x}`].image}
-              className="w-full h-full"
-              alt="alt"
-            />
-          )}
-        </div>
-      ))}
-    </div>
-  );
+					// 	setRenderMap(newMap);
+					// }}
+					key={index}
+					className={classNames(
+						"aspect-square",
+						// "outline outline-1 outline-white/30",
+						item.value === 1 && "bg-red-600/50"
+					)}>
+					{currentRoom.actions?.[`${item.y},${item.x}`] && (
+						<img
+							id={currentRoom.actions?.[`${item.y},${item.x}`].id}
+							src={currentRoom.actions?.[`${item.y},${item.x}`].image}
+							className={classNames(
+								"w-full h-full object-contain",
+								currentRoom.actions?.[`${item.y},${item.x}`].type ===
+									"POP_UP_QUESTION" && "scale-[1.8]"
+							)}
+							alt="alt"
+						/>
+					)}
+				</div>
+			))}
+		</div>
+	);
 };
 
 export default GridTemplate;

@@ -10,55 +10,55 @@ export const ROWS = 20;
 export const COLS = 30;
 
 export const CONFIG_MAP: ConfigMapType = {
-  lobby: {
-    id: "lobby",
-    rows: 20,
-    cols: 30,
-    map: CLASS_MAP,
-    image: lobbyImage,
-    actions: {
-      "19,10": {
-        id: "door_to_room",
-        type: "CHANGE_ROOM",
-        value: {
-          name: "room",
-          resetPosition: {
-            x: 5,
-            y: 11,
-          },
-        },
-        image: hole,
-      },
-      "10,10": {
-        id: "question",
-        type: "POP_UP_QUESTION",
-        value: {
-          question: "How __ you?",
-          answer: "are",
-        },
-        image: dino,
-      },
-    },
-  },
-  room: {
-    id: "room",
-    rows: 20,
-    cols: 30,
-    map: GARDEN_MAP,
-    image: garden,
-    actions: {
-      "5,10": {
-        id: "door_to_room",
-        type: "CHANGE_ROOM",
-        value: {
-          name: "lobby",
-          resetPosition: {
-            x: 20,
-            y: 10,
-          },
-        },
-        image: hole,
-      },
-    },
-  },
+	lobby: {
+		id: "lobby",
+		rows: 20,
+		cols: 30,
+		map: CLASS_MAP,
+		image: lobbyImage,
+		actions: {
+			"19,10": {
+				id: "door_to_room",
+				type: "CHANGE_ROOM",
+				value: {
+					name: "room",
+					resetPosition: {
+						x: 5,
+						y: 11,
+					},
+				},
+				image: hole,
+			},
+			"10,10": {
+				id: "question",
+				type: "POP_UP_QUESTION",
+				value: {
+					question: ["How", "you?"],
+					answer: ["are"],
+				},
+				image: dino,
+			},
+		},
+	},
+	room: {
+		id: "room",
+		rows: 20,
+		cols: 30,
+		map: GARDEN_MAP,
+		image: garden,
+		actions: {
+			"5,10": {
+				id: "door_to_room",
+				type: "CHANGE_ROOM",
+				value: {
+					name: "lobby",
+					resetPosition: {
+						x: 20,
+						y: 10,
+					},
+				},
+				image: hole,
+			},
+		},
+	},
 };
