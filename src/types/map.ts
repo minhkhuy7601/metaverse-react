@@ -4,6 +4,7 @@ export type MapType = {
   cols: number;
   map: number[][];
   image: string;
+  meetingUrl: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   actions?: Record<string, any>;
 };

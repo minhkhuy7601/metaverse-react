@@ -8,10 +8,14 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="bg-black">
-      {children}
+    <div className="w-screen h-screen top-0 flex relative left-0 overflow-hidden flex-col">
+      <div className="bg-black flex w-full h-full">
+        <div className="flex-1 relative h-full transition-all ease-linear duration-200">
+          {children}
+        </div>
+        <ChatBox />
+      </div>
       <Tool />
-      <ChatBox />
     </div>
   );
 };
