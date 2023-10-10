@@ -2,6 +2,8 @@
 import { CONFIG_MAP } from "@/constant/config";
 import { auth, db } from "@/lib/firebase";
 import { setLoading } from "@/redux/slices/mapSlice";
+import { setQA } from "@/redux/slices/popupQASlice";
+import { RootState } from "@/redux/store";
 import { MapType } from "@/types/map";
 import { GamePlayContextProps } from "@/types/player";
 import { astar } from "@/utils/automove";
@@ -10,245 +12,256 @@ import { getGridCoordinates, isPerformAction, isSolid } from "@/utils/gameplay";
 import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { onDisconnect, onValue, ref, set } from "firebase/database";
 import { ReactNode, createContext, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 export const GamePlayContext = createContext<GamePlayContextProps | undefined>(
-  undefined
+	undefined
 );
 
 export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
-  const dispatch = useDispatch();
-  const playerIdRef = useRef<string | null>(null);
-  const playerRef = useRef<any>(null);
-  const listPlayersRef = useRef<any>(null);
-  const [currentRoom, setCurrentRoom] = useState<MapType>(CONFIG_MAP["lobby"]);
-  const [players, setPlayers] = useState<Record<string, any>>({});
-  async function handleActionPlayer(type: string, value: any) {
-    console.log(type);
-    switch (type) {
-      case "CHANGE_ROOM": {
-        dispatch(setLoading(true));
-        new Promise<void>((resolve) => {
-          setTimeout(() => {
-            handleSetPositionPlayerCurrent(
-              value.resetPosition.x,
-              value.resetPosition.y
-            );
-            if (playerIdRef.current) {
-              listPlayersRef.current[playerIdRef.current].roomId = value?.name;
-              set(
-                playerRef.current,
-                listPlayersRef.current[playerIdRef.current]
-              );
-            }
-            setCurrentRoom(CONFIG_MAP[value?.name]);
-            resolve();
-          }, 600);
-        }).then(() => {
-          setTimeout(() => {
-            dispatch(setLoading(false));
-          }, 200);
-        });
+	const dispatch = useDispatch();
+	const playerIdRef = useRef<string | null>(null);
+	const playerRef = useRef<any>(null);
+	const listPlayersRef = useRef<any>(null);
+	const [currentRoom, setCurrentRoom] = useState<MapType>(CONFIG_MAP["lobby"]);
+	const [players, setPlayers] = useState<Record<string, any>>({});
+	const qa = useSelector((state: RootState) => state.popupQASlice);
+	const currentValueQA = useRef<any>(null);
+	const listennerPressKeyX = (event: any) => {
+		// Check if the pressed key is the "X" key (key code 88 or key identifier "KeyX")
 
-        break;
-      }
-      case "POP_UP_QUESTION": {
-        console.log(type, value);
-        break;
-      }
+		if (event.keyCode === 88 || event.key === "x" || event.key === "X") {
+			if (!qa.question?.length) {
+				if (currentValueQA.current) dispatch(setQA(currentValueQA.current));
+			}
+		}
+	};
 
-      default:
-        break;
-    }
-  }
-  function handleSetPositionPlayerCurrent(x: number, y: number) {
-    const playerId = playerIdRef.current;
-    if (!playerId) return;
-    listPlayersRef.current[playerId].x = x;
-    listPlayersRef.current[playerId].y = y;
-    set(playerRef.current, listPlayersRef.current[playerId]);
-  }
-  function handleArrowPress(xChange = 0, yChange = 0) {
-    const playerId = playerIdRef.current;
+	async function handleActionPlayer(type: string, value: any) {
+		console.log(type);
+		switch (type) {
+			case "CHANGE_ROOM": {
+				dispatch(setLoading(true));
+				new Promise<void>((resolve) => {
+					setTimeout(() => {
+						handleSetPositionPlayerCurrent(
+							value.resetPosition.x,
+							value.resetPosition.y
+						);
+						if (playerIdRef.current) {
+							listPlayersRef.current[playerIdRef.current].roomId = value?.name;
+							set(
+								playerRef.current,
+								listPlayersRef.current[playerIdRef.current]
+							);
+						}
+						setCurrentRoom(CONFIG_MAP[value?.name]);
+						resolve();
+					}, 600);
+				}).then(() => {
+					setTimeout(() => {
+						dispatch(setLoading(false));
+					}, 200);
+				});
 
-    if (!playerId) return;
-    if (!listPlayersRef.current[playerId]) return;
+				break;
+			}
+			case "POP_UP_QUESTION": {
+				currentValueQA.current = value;
+				document.addEventListener("keydown", listennerPressKeyX);
+				break;
+			}
 
-    const newX = listPlayersRef.current[playerId].x + xChange;
-    const newY = listPlayersRef.current[playerId].y + yChange;
+			default:
+				break;
+		}
+	}
+	function handleSetPositionPlayerCurrent(x: number, y: number) {
+		const playerId = playerIdRef.current;
+		if (!playerId) return;
+		listPlayersRef.current[playerId].x = x;
+		listPlayersRef.current[playerId].y = y;
+		set(playerRef.current, listPlayersRef.current[playerId]);
+	}
+	function handleArrowPress(xChange = 0, yChange = 0) {
+		const playerId = playerIdRef.current;
 
-    if (!isSolid(currentRoom.map, newX, newY)) {
-      listPlayersRef.current[playerId].x = newX;
-      listPlayersRef.current[playerId].y = newY;
-      let currentState = listPlayersRef.current[playerId].state;
-      if (currentState === 3) {
-        currentState = 1;
-      } else {
-        currentState++;
-      }
-      listPlayersRef.current[playerId].state = currentState;
-      if (xChange === 1) {
-        listPlayersRef.current[playerId].direction = "right";
-      }
-      if (xChange === -1) {
-        listPlayersRef.current[playerId].direction = "left";
-      }
-      if (yChange === 1) {
-        listPlayersRef.current[playerId].direction = "bottom";
-      }
-      if (yChange === -1) {
-        listPlayersRef.current[playerId].direction = "top";
-      }
+		if (!playerId) return;
+		if (!listPlayersRef.current[playerId]) return;
 
-      set(playerRef.current, listPlayersRef.current[playerId]);
+		const newX = listPlayersRef.current[playerId].x + xChange;
+		const newY = listPlayersRef.current[playerId].y + yChange;
 
-      isPerformAction(currentRoom, newX, newY, handleActionPlayer);
-      return true;
-    } else {
-      return false;
-    }
-  }
+		if (!isSolid(currentRoom.map, newX, newY)) {
+			listPlayersRef.current[playerId].x = newX;
+			listPlayersRef.current[playerId].y = newY;
+			let currentState = listPlayersRef.current[playerId].state;
+			if (currentState === 3) {
+				currentState = 1;
+			} else {
+				currentState++;
+			}
+			listPlayersRef.current[playerId].state = currentState;
+			if (xChange === 1) {
+				listPlayersRef.current[playerId].direction = "right";
+			}
+			if (xChange === -1) {
+				listPlayersRef.current[playerId].direction = "left";
+			}
+			if (yChange === 1) {
+				listPlayersRef.current[playerId].direction = "bottom";
+			}
+			if (yChange === -1) {
+				listPlayersRef.current[playerId].direction = "top";
+			}
 
-  useEffect(() => {
-    // initEventListener();
-    const ArrowUp = new KeyPressListener("ArrowUp", () =>
-      handleArrowPress(0, -1)
-    );
-    const ArrowDown = new KeyPressListener("ArrowDown", () =>
-      handleArrowPress(0, 1)
-    );
-    const ArrowLeft = new KeyPressListener("ArrowLeft", () =>
-      handleArrowPress(-1, 0)
-    );
-    const ArrowRight = new KeyPressListener("ArrowRight", () =>
-      handleArrowPress(1, 0)
-    );
-    return () => {
-      console.log("unbind");
-      ArrowUp.unbind();
-      ArrowDown.unbind();
-      ArrowLeft.unbind();
-      ArrowRight.unbind();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRoom.id]);
-  function initHandleMoveOnClick() {
-    const gameContainer = document.querySelector("#game-container");
-    if (!gameContainer) return;
-    const rect = gameContainer.getBoundingClientRect();
-    let time: NodeJS.Timeout | null = null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    gameContainer.addEventListener("click", async (event: any) => {
-      if (time) clearTimeout(time);
-      const playerId = playerIdRef.current;
-      if (!playerId) return;
-      try {
-        const { x, y } = getGridCoordinates(event.pageX, event.pageY, rect);
-        console.log("x, y", x, y);
-        console.log(
-          "listPlayersRef.current[playerId].x,",
-          listPlayersRef.current[playerId].x
-        );
-        console.log(
-          "listPlayersRef.current[playerId].y,",
-          listPlayersRef.current[playerId].y
-        );
-        const race = await astar(
-          currentRoom.map,
-          [
-            listPlayersRef.current[playerId].x,
-            listPlayersRef.current[playerId].y,
-          ],
-          [x, y]
-        );
-        console.log("race", race);
-        if (race?.length)
-          for (let i = 0; i < race.length - 1; i++) {
-            const position = race[i];
-            const positionNext = race[i + 1];
-            const newX = positionNext[0] - position[0];
-            const newY = positionNext[1] - position[1];
-            const isMoving = handleArrowPress(newX, newY);
-            await new Promise((resolve, reject) => {
-              time = setTimeout(async () => {
-                if (!isMoving) {
-                  handleArrowPress(-newX, -newY);
-                  reject(1);
-                }
-                resolve(1);
-              }, 100);
-            });
-          }
-      } catch (error) {
-        console.log(error);
-      }
-    });
-  }
+			set(playerRef.current, listPlayersRef.current[playerId]);
+			document.removeEventListener("keydown", listennerPressKeyX);
+			isPerformAction(currentRoom, newX, newY, handleActionPlayer);
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-  function initGame() {
-    const allPlayersRef = ref(db, `players`);
-    onValue(allPlayersRef, (snapshot) => {
-      //   console.log("snapshot", snapshot);
+	useEffect(() => {
+		// initEventListener();
+		const ArrowUp = new KeyPressListener("ArrowUp", () =>
+			handleArrowPress(0, -1)
+		);
+		const ArrowDown = new KeyPressListener("ArrowDown", () =>
+			handleArrowPress(0, 1)
+		);
+		const ArrowLeft = new KeyPressListener("ArrowLeft", () =>
+			handleArrowPress(-1, 0)
+		);
+		const ArrowRight = new KeyPressListener("ArrowRight", () =>
+			handleArrowPress(1, 0)
+		);
+		return () => {
+			ArrowUp.unbind();
+			ArrowDown.unbind();
+			ArrowLeft.unbind();
+			ArrowRight.unbind();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentRoom.id]);
 
-      const playersSnapshot = snapshot.val() || {};
-      Object.entries(playersSnapshot).forEach(([id, value]) => {
-        if (value.roomId !== currentRoom.id) {
-          delete playersSnapshot[id];
-        }
-      });
-      //   console.log("playersSnapshot", playersSnapshot);
-      setPlayers(playersSnapshot);
-      listPlayersRef.current = playersSnapshot;
-    });
-    // initHandleMoveOnClick();
-  }
+	function initHandleMoveOnClick() {
+		const gameContainer = document.querySelector("#game-container");
+		if (!gameContainer) return;
+		const rect = gameContainer.getBoundingClientRect();
+		let time: NodeJS.Timeout | null = null;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		gameContainer.addEventListener("click", async (event: any) => {
+			if (time) clearTimeout(time);
+			const playerId = playerIdRef.current;
+			if (!playerId) return;
+			try {
+				const { x, y } = getGridCoordinates(event.pageX, event.pageY, rect);
+				console.log("x, y", x, y);
+				console.log(
+					"listPlayersRef.current[playerId].x,",
+					listPlayersRef.current[playerId].x
+				);
+				console.log(
+					"listPlayersRef.current[playerId].y,",
+					listPlayersRef.current[playerId].y
+				);
+				const race = await astar(
+					currentRoom.map,
+					[
+						listPlayersRef.current[playerId].x,
+						listPlayersRef.current[playerId].y,
+					],
+					[x, y]
+				);
+				if (race?.length)
+					for (let i = 0; i < race.length - 1; i++) {
+						const position = race[i];
+						const positionNext = race[i + 1];
+						const newX = positionNext[0] - position[0];
+						const newY = positionNext[1] - position[1];
+						const isMoving = handleArrowPress(newX, newY);
+						await new Promise((resolve, reject) => {
+							time = setTimeout(async () => {
+								if (!isMoving) {
+									handleArrowPress(-newX, -newY);
+									reject(1);
+								}
+								resolve(1);
+							}, 100);
+						});
+					}
+			} catch (error) {
+				console.log(error);
+			}
+		});
+	}
+	function initGame() {
+		const allPlayersRef = ref(db, `players`);
+		onValue(allPlayersRef, (snapshot) => {
+			//   console.log("snapshot", snapshot);
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      //   console.log("user", user);
-      if (user) {
-        const uid = user?.uid;
-        const refPlayerFirebase = ref(db, `players/${uid}`);
-        playerIdRef.current = uid;
-        playerRef.current = refPlayerFirebase;
-        set(refPlayerFirebase, {
-          roomId: currentRoom.id,
-          id: uid,
-          name: "neo",
-          direction: "down",
-          state: 1,
-          color: "red",
-          x: 16,
-          y: 6,
-        });
-        onDisconnect(refPlayerFirebase).remove();
-      } else {
-        console.log("user is logged out");
-      }
-    });
+			const playersSnapshot = snapshot.val() || {};
+			Object.entries(playersSnapshot).forEach(([id, value]: any) => {
+				if (value.roomId !== currentRoom.id) {
+					delete playersSnapshot[id];
+				}
+			});
+			//   console.log("playersSnapshot", playersSnapshot);
+			setPlayers(playersSnapshot);
+			listPlayersRef.current = playersSnapshot;
+		});
+		// initHandleMoveOnClick();
+	}
 
-    signInAnonymously(auth)
-      .then(() => {})
-      .catch((error) => {
-        console.log("error", error);
-      });
+	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			//   console.log("user", user);
+			if (user) {
+				const uid = user?.uid;
+				const refPlayerFirebase = ref(db, `players/${uid}`);
+				playerIdRef.current = uid;
+				playerRef.current = refPlayerFirebase;
+				set(refPlayerFirebase, {
+					roomId: currentRoom.id,
+					id: uid,
+					name: "neo",
+					direction: "down",
+					state: 1,
+					color: "red",
+					x: 16,
+					y: 6,
+				});
+				onDisconnect(refPlayerFirebase).remove();
+			} else {
+				console.log("user is logged out");
+			}
+		});
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+		signInAnonymously(auth)
+			.then(() => {})
+			.catch((error) => {
+				console.log("error", error);
+			});
 
-  useEffect(() => {
-    initGame();
-  }, [currentRoom.id]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-  const contextValue: GamePlayContextProps = {
-    playerId: playerIdRef.current,
-    playerRef,
-    players,
-    currentRoom,
-  };
+	useEffect(() => {
+		initGame();
+	}, [currentRoom.id]);
 
-  return (
-    <GamePlayContext.Provider value={contextValue}>
-      {children}
-    </GamePlayContext.Provider>
-  );
+	const contextValue: GamePlayContextProps = {
+		playerId: playerIdRef.current,
+		playerRef,
+		players,
+		currentRoom,
+	};
+
+	return (
+		<GamePlayContext.Provider value={contextValue}>
+			{children}
+		</GamePlayContext.Provider>
+	);
 };

@@ -1,10 +1,12 @@
 import map from "@/redux/slices/mapSlice";
+import popupQASlice from "@/redux/slices/popupQASlice";
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
-  reducer: {
-    map,
-  },
+	reducer: {
+		map,
+		popupQASlice,
+	},
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
