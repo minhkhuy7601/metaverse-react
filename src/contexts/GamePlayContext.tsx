@@ -33,6 +33,13 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
               value.resetPosition.x,
               value.resetPosition.y
             );
+            if (playerIdRef.current) {
+              listPlayersRef.current[playerIdRef.current].roomId = value?.name;
+              set(
+                playerRef.current,
+                listPlayersRef.current[playerIdRef.current]
+              );
+            }
             setCurrentRoom(CONFIG_MAP[value?.name]);
             resolve();
           }, 600);
@@ -183,6 +190,11 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       //   console.log("snapshot", snapshot);
 
       const playersSnapshot = snapshot.val() || {};
+      Object.entries(playersSnapshot).forEach(([id, value]) => {
+        if (value.roomId !== currentRoom.id) {
+          delete playersSnapshot[id];
+        }
+      });
       //   console.log("playersSnapshot", playersSnapshot);
       setPlayers(playersSnapshot);
       listPlayersRef.current = playersSnapshot;
@@ -199,7 +211,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
         playerIdRef.current = uid;
         playerRef.current = refPlayerFirebase;
         set(refPlayerFirebase, {
-          roomId: 1,
+          roomId: currentRoom.id,
           id: uid,
           name: "neo",
           direction: "down",
@@ -219,9 +231,13 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       .catch((error) => {
         console.log("error", error);
       });
-    initGame();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    initGame();
+  }, [currentRoom.id]);
 
   const contextValue: GamePlayContextProps = {
     playerId: playerIdRef.current,
