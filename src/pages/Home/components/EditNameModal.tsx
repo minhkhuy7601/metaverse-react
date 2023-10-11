@@ -28,9 +28,7 @@ export default function EditNameModal() {
 			if (!playerId) return;
 			const refPlayerFirebase = ref(db, `players/${currentPlayer.id}`);
 			const updatedPlayer = {
-				...currentPlayer,
-				x: players[playerId].x,
-				y: players[playerId].y,
+				...players[playerId],
 				name: inputRef.current?.value,
 			};
 			set(refPlayerFirebase, updatedPlayer);
@@ -58,12 +56,15 @@ export default function EditNameModal() {
 					</button>
 					<div className="relative h-40 w-full bg-[#333A64]">
 						<div
+							className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 w-24 h-32`}
 							style={{
 								backgroundSize: "280px",
 								backgroundPositionY: "-10px",
 								backgroundPositionX: "-92px",
-							}}
-							className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 w-24 h-32 bg-[url('@/assets/characters/character2.png')]"></div>
+								backgroundImage: `url('${
+									playerId && players[playerId]?.avatar
+								}.png')`,
+							}}></div>
 					</div>
 					<form
 						onSubmit={handleChangeName}

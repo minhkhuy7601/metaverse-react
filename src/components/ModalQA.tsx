@@ -15,7 +15,7 @@ const ModalQA = () => {
 			tabIndex={-1}
 			aria-hidden="true"
 			className="w-full h-full z-50 absolute top-0 ">
-			<div className="relative w-full max-w-2xl max-h-full">
+			<div className="relative w-full max-h-full">
 				{/* Modal content */}
 				<div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
 					{/* Modal header */}

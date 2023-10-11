@@ -25,9 +25,7 @@ export default function EditAvatarModal() {
 		if (!playerId) return;
 		const refPlayerFirebase = ref(db, `players/${currentPlayer.id}`);
 		const updatedPlayer = {
-			...currentPlayer,
-			x: players[playerId].x,
-			y: players[playerId].y,
+			...players[playerId],
 			avatar: currentAvatar,
 		};
 		set(refPlayerFirebase, updatedPlayer);
@@ -61,8 +59,9 @@ export default function EditAvatarModal() {
 								backgroundSize: "280px",
 								backgroundPositionY: "-10px",
 								backgroundPositionX: "-92px",
+								backgroundImage: `url('/${currentAvatar}.png')`,
 							}}
-							className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 w-24 h-32 bg-[url('@/assets/characters/${currentAvatar}.png')]`}></div>
+							className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 w-24 h-32`}></div>
 					</div>
 					<div className="py-6 px-8 text-white flex flex-col items-center">
 						<div className="w-full grid  grid-cols-4 gap-2">
@@ -77,12 +76,13 @@ export default function EditAvatarModal() {
 										currentAvatar === item.id ? "bg-indigo-400" : "bg-[#333A64]"
 									)}>
 									<div
+										className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 w-24 h-32`}
 										style={{
 											backgroundSize: "280px",
 											backgroundPositionY: "-10px",
 											backgroundPositionX: "-92px",
-										}}
-										className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 w-24  h-32 bg-[url('@/assets/characters/${item.id}.png')]`}></div>
+											backgroundImage: `url('/${item.id}.png')`,
+										}}></div>
 								</div>
 							))}
 						</div>

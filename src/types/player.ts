@@ -6,9 +6,9 @@ export interface PlayerType {
 	name: string;
 	direction?: string;
 	avatar?: string;
-	x?: number;
+	x: number;
 	state?: number;
-	y?: number;
+	y: number;
 }
 
 export interface GamePlayContextProps {

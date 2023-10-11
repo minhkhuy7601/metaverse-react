@@ -43,7 +43,6 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	async function handleActionPlayer(type: string, value: any) {
-		console.log(type);
 		switch (type) {
 			case "CHANGE_ROOM": {
 				dispatch(setLoading(true));
@@ -73,6 +72,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 			}
 			case "POP_UP_QUESTION": {
 				currentValueQA.current = value;
+				removeClickPlayerMap();
 				document.addEventListener("keydown", listennerPressKeyX);
 				break;
 			}
@@ -181,7 +181,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 				],
 				[x, y]
 			);
-			console.log("race", race);
+
 			if (race?.length)
 				for (let i = 0; i < race.length - 1; i++) {
 					const position = race[i];
@@ -203,17 +203,25 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 			console.log(error);
 		}
 	};
+	const removeClickPlayerMap = () => {
+		const gameContainer = document.querySelector("#game-container");
+		if (!gameContainer) return;
+		gameContainer.removeEventListener("click", handleDirectPlayer);
+	};
 
-	useEffect(() => {
+	const addClickPlayerMap = () => {
 		const gameContainer = document.querySelector("#game-container");
 		if (!gameContainer) return;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		gameContainer.addEventListener("click", handleDirectPlayer);
+	};
+	useEffect(() => {
+		if (!qa.question.length) addClickPlayerMap();
 		return () => {
-			gameContainer.removeEventListener("click", handleDirectPlayer);
+			removeClickPlayerMap();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentRoom.id]);
+	}, [currentRoom.id, qa]);
 	function initGame() {
 		const allPlayersRef = ref(db, `players`);
 		onValue(allPlayersRef, (snapshot) => {
