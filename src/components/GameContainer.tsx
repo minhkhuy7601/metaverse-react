@@ -20,7 +20,7 @@ const GameContainer = () => {
       )}>
       <VideoFrame />
       <div
-        id="game-container relative"
+        id="game-container"
         style={{
           width: `${currentRoom.cols * CELL_SIZE}px`,
           height: `${currentRoom.rows * CELL_SIZE}px`,

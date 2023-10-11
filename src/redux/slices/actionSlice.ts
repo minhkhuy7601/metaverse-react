@@ -2,10 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface ActionState {
   activeAction: "CHAT_BOX" | "MEMBER" | null;
+  isShowAdjustingAvatarModal: boolean;
+  isShowEditNameModal: boolean;
 }
 
 const initialState: ActionState = {
   activeAction: "CHAT_BOX",
+  isShowAdjustingAvatarModal: false,
+  isShowEditNameModal: false,
 };
 
 export const actionState = createSlice({
@@ -21,10 +25,21 @@ export const actionState = createSlice({
     clearActiveAction: (state) => {
       state.activeAction = null;
     },
+    setShowAdjustingAvatarModal: (state, { payload }) => {
+      state.isShowAdjustingAvatarModal = payload;
+    },
+    setShowEditNameModal: (state, { payload }) => {
+      state.isShowEditNameModal = payload;
+    },
   },
 });
 
-export const { setActionToChatBox, setActionToMember, clearActiveAction } =
-  actionState.actions;
+export const {
+  setActionToChatBox,
+  setActionToMember,
+  clearActiveAction,
+  setShowAdjustingAvatarModal,
+  setShowEditNameModal,
+} = actionState.actions;
 
 export default actionState.reducer;

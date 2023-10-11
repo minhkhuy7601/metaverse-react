@@ -1,11 +1,14 @@
 import {
   setActionToChatBox,
   setActionToMember,
+  setShowAdjustingAvatarModal,
+  setShowEditNameModal,
 } from "@/redux/slices/actionSlice";
 import { RootState } from "@/redux/store";
 import classNames from "classnames";
 import { FaUserFriends } from "react-icons/fa";
 import { IoChatbubblesSharp } from "react-icons/io5";
+import { MdModeEditOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
 const Tool = () => {
@@ -13,10 +16,33 @@ const Tool = () => {
   const activeAction = useSelector(
     (state: RootState) => state.actionSlice.activeAction
   );
-  console.log("activeAction", activeAction);
   return (
-    <div className="h-16 bg-[#202540] w-full border-gray-100/20 flex justify-end">
-      <div className="h-full flex items-center mr-10 gap-3">
+    <div className="h-16 bg-[#202540] w-full border-gray-100/20 flex justify-between items-center px-10">
+      <div className="h-10 w-[200px] rounded-md bg-indigo-400/20 flex">
+        <div
+          onClick={() => {
+            dispatch(setShowAdjustingAvatarModal(true));
+          }}
+          className="w-[30%] hover:bg-indigo-200/30 duration-300 cursor-pointer h-full border-r-[1px] border-indigo-50/10 flex justify-center items-center rounded-s-md">
+          <button className="h-[70%] aspect-square bg-white rounded-full"></button>
+        </div>
+        <div
+          onClick={() => {
+            dispatch(setShowEditNameModal(true));
+          }}
+          className="relative w-[70%] h-full py-1 px-2 hover:bg-indigo-200/30 duration-300 cursor-pointer rounded-e-md">
+          <p className="text-white text-xs font-medium">Name</p>
+          <p className=" text-xs text-gray-300">Available</p>
+          <div className="absolute bottom-0 -right-0 w-3 h-3">
+            <span className="absolute inset-0 bg-green-400 rounded-full animate-ping"></span>
+            <span className="absolute inset-0 bg-green-400 rounded-full border-[1px] border-gray-900"></span>
+          </div>
+          <button className="absolute top-1 right-1 text-gray-200">
+            <MdModeEditOutline />
+          </button>
+        </div>
+      </div>
+      <div className="h-full flex items-center gap-3">
         <button
           onClick={() => {
             dispatch(setActionToChatBox());

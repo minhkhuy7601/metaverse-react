@@ -140,6 +140,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     const ArrowRight = new KeyPressListener("ArrowRight", () =>
       handleArrowPress(1, 0)
     );
+    initHandleMoveOnClick();
     return () => {
       ArrowUp.unbind();
       ArrowDown.unbind();
@@ -151,6 +152,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 
   function initHandleMoveOnClick() {
     const gameContainer = document.querySelector("#game-container");
+    console.log("gameContainer", gameContainer);
     if (!gameContainer) return;
     const rect = gameContainer.getBoundingClientRect();
     let time: NodeJS.Timeout | null = null;
@@ -178,6 +180,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
           ],
           [x, y]
         );
+        console.log("race", race);
         if (race?.length)
           for (let i = 0; i < race.length - 1; i++) {
             const position = race[i];
