@@ -15,7 +15,7 @@ const GameContainer = () => {
   return (
     <div
       className={classNames(
-        "w-full h-full relative top-0 flex justify-center items-center duration-500",
+        "w-full h-full relative top-0 flex justify-center items-center duration-500 hover:cursor-pointer",
         isLoading ? "invisible opacity-0" : "visible opacity-100"
       )}>
       <VideoFrame />
@@ -31,7 +31,6 @@ const GameContainer = () => {
           alt="bg"
           className="absolute top-0 left-0 w-full h-full object-cover"
         />
-
         <ModalQA />
         <GridTemplate />
         <PlayersList />

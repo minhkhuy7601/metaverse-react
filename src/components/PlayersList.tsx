@@ -20,7 +20,7 @@ const PlayersList = () => {
           y={item.y}
           name={item.name}
           state={item.state}
-          color={item.color}
+          avatar={item.avatar}
           direction={item.direction}
         />
       ))}

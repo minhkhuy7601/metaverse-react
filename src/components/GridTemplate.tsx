@@ -1,5 +1,4 @@
 import { COLS } from "@/constant/config";
-import { CLASS_MAP } from "@/constant/maps/class";
 import { useGamePlayContext } from "@/hooks/useGamePlayContext";
 import { setShowVideo } from "@/redux/slices/videoSlice";
 import classNames from "classnames";
@@ -12,7 +11,7 @@ const GridTemplate = () => {
   const [renderMap] = useState(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const temp: Array<{ x: number; y: number; value: any }> = [];
-    CLASS_MAP.forEach((i, index) =>
+    currentRoom.map.forEach((i, index) =>
       i.forEach((item, j) => temp.push({ x: index, y: j, value: item }))
     );
     return temp;
@@ -27,17 +26,17 @@ const GridTemplate = () => {
       {renderMap?.map((item, index) => (
         <div
           // onClick={() => {
-          // 	console.log("item", item);
-          // 	const newMap = JSON.parse(JSON.stringify(renderMap));
-          // 	if (newMap[index].value === 1) {
-          // 		newMap[index].value = 0;
-          // 		currentRoom.map[item.x][item.y] = 0;
-          // 	} else {
-          // 		newMap[index].value = 1;
-          // 		currentRoom.map[item.x][item.y] = 1;
-          // 	}
+          //   console.log("item", item);
+          //   const newMap = JSON.parse(JSON.stringify(renderMap));
+          //   if (newMap[index].value === 1) {
+          //     newMap[index].value = 0;
+          //     currentRoom.map[item.x][item.y] = 0;
+          //   } else {
+          //     newMap[index].value = 1;
+          //     currentRoom.map[item.x][item.y] = 1;
+          //   }
 
-          // 	setRenderMap(newMap);
+          //   setRenderMap(newMap);
           // }}
           key={index}
           className={classNames(

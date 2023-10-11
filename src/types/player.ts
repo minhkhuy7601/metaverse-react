@@ -13,6 +13,7 @@ export interface PlayerType {
 
 export interface GamePlayContextProps {
   playerId: string | null;
+  setCurrentPlayer: React.Dispatch<React.SetStateAction<object | PlayerType>>;
   messages: Record<string, MessageType>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   playerRef: any; // Type accordingly to your Firebase database reference
