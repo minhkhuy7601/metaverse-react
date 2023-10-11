@@ -7,7 +7,6 @@ const VideoFrame = () => {
     (state: RootState) => state.videoSlice.isShow
   );
   const { currentRoom } = useGamePlayContext();
-  console.log("currentMap", currentRoom);
   return (
     <>
       {isShowVideo && (

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import ChatBox from "./components/ChatBox";
+import MemberBox from "./components/MemberBox";
 import Tool from "./components/Tool";
 
 type LayoutProps = {
@@ -14,6 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {children}
         </div>
         <ChatBox />
+        <MemberBox />
       </div>
       <Tool />
     </div>

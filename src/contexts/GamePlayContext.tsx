@@ -5,7 +5,8 @@ import { setLoading } from "@/redux/slices/mapSlice";
 import { setQA } from "@/redux/slices/popupQASlice";
 import { RootState } from "@/redux/store";
 import { MapType } from "@/types/map";
-import { GamePlayContextProps } from "@/types/player";
+import { MessageType } from "@/types/message";
+import { GamePlayContextProps, PlayerType } from "@/types/player";
 import { astar } from "@/utils/automove";
 import { KeyPressListener } from "@/utils/event";
 import { getGridCoordinates, isPerformAction, isSolid } from "@/utils/gameplay";
@@ -23,7 +24,9 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
   const playerRef = useRef<any>(null);
   const listPlayersRef = useRef<any>(null);
   const [currentRoom, setCurrentRoom] = useState<MapType>(CONFIG_MAP["lobby"]);
+  const [currentPlayer, setCurrentPlayer] = useState<PlayerType>({});
   const [players, setPlayers] = useState<Record<string, any>>({});
+  const [messages, setMessages] = useState<Record<string, MessageType>>({});
   const qa = useSelector((state: RootState) => state.popupQASlice);
   const currentValueQA = useRef<any>(null);
   const listennerPressKeyX = (event: any) => {
@@ -216,6 +219,15 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
   }
 
   useEffect(() => {
+    const allMessagesRef = ref(db, `messages/${currentRoom.id}`);
+    onValue(allMessagesRef, (snapshot) => {
+      const messageSnapshot = snapshot.val() || {};
+      console.log("messageSnapshot", messageSnapshot);
+      setMessages(messageSnapshot);
+    });
+  }, [currentRoom.id]);
+
+  useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       //   console.log("user", user);
       if (user) {
@@ -223,16 +235,18 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
         const refPlayerFirebase = ref(db, `players/${uid}`);
         playerIdRef.current = uid;
         playerRef.current = refPlayerFirebase;
-        set(refPlayerFirebase, {
+        const initPlayer = {
           roomId: currentRoom.id,
           id: uid,
-          name: "neo",
+          name: "uchiha",
           direction: "down",
           state: 1,
           color: "red",
           x: 16,
           y: 6,
-        });
+        };
+        set(refPlayerFirebase, initPlayer);
+        setCurrentPlayer(initPlayer);
         onDisconnect(refPlayerFirebase).remove();
       } else {
         console.log("user is logged out");
@@ -250,13 +264,16 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     initGame();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRoom.id]);
 
   const contextValue: GamePlayContextProps = {
     playerId: playerIdRef.current,
+    messages,
     playerRef,
     players,
     currentRoom,
+    currentPlayer,
   };
 
   return (
