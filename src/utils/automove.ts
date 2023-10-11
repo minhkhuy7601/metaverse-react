@@ -1,109 +1,76 @@
-class PriorityQueue<T> {
-  private elements: { element: T; priority: number }[];
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function astar(grid: any, start: any, end: any) {
+	console.log(start, end);
+	const numRows = grid.length;
+	const numCols = grid[0].length;
+	const openList: any = [];
+	openList.push({ node: start, g: 0, h: heuristic(start, end) });
+	const cameFrom: any = {};
+	const gScore = new Array(numRows)
+		.fill(null)
+		.map(() => new Array(numCols).fill(Infinity));
+	gScore[start[0]][start[1]] = 0;
+	const fScore = new Array(numRows)
+		.fill(null)
+		.map(() => new Array(numCols).fill(Infinity));
+	fScore[start[0]][start[1]] = heuristic(start, end);
 
-  constructor() {
-    this.elements = [];
-  }
+	const directions = [
+		[-1, 0],
+		[1, 0],
+		[0, -1],
+		[0, 1],
+	];
 
-  enqueue(element: T, priority: number): void {
-    this.elements.push({ element, priority });
-    this.elements.sort((a, b) => a.priority - b.priority);
-  }
+	while (openList.length > 0) {
+		openList.sort((a: any, b: any) => a.g + a.h - (b.g + b.h));
+		const current = openList.shift().node as any;
 
-  dequeue(): T | undefined {
-    const result = this.elements.shift();
-    return result ? result.element : undefined;
-  }
+		if (current[0] === end[0] && current[1] === end[1]) {
+			return reconstructPath(cameFrom, end);
+		}
 
-  isEmpty(): boolean {
-    return this.elements.length === 0;
-  }
+		for (const [dr, dc] of directions) {
+			const newRow = current[0] + dr;
+			const newCol = current[1] + dc;
+
+			if (
+				newRow >= 0 &&
+				newRow < numRows &&
+				newCol >= 0 &&
+				newCol < numCols &&
+				grid[newRow][newCol] !== 1
+			) {
+				const tentativeGScore = gScore[current[0]][current[1]] + 1;
+
+				if (tentativeGScore < gScore[newRow][newCol]) {
+					cameFrom[`${newRow}-${newCol}`] = current;
+					gScore[newRow][newCol] = tentativeGScore;
+					fScore[newRow][newCol] =
+						tentativeGScore + heuristic([newRow, newCol], end);
+					openList.push({
+						node: [newRow, newCol],
+						g: tentativeGScore,
+						h: heuristic([newRow, newCol], end),
+					});
+				}
+			}
+		}
+	}
+
+	return null; // Không tìm thấy đường đi
 }
 
-export type NodePlayer = [number, number];
-
-function heuristic(node: NodePlayer, goal: NodePlayer): number {
-  return Math.abs(node[0] - goal[0]) + Math.abs(node[1] - goal[1]);
+function heuristic(a: any, b: any) {
+	// Heuristic (ước tính) dự đoán khoảng cách từ a đến b, thường sử dụng khoảng cách Euclidean
+	return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2);
 }
 
-export function astar(
-  grid: number[][],
-  start: NodePlayer,
-  end: NodePlayer
-): NodePlayer[] | null {
-  const openSet = new PriorityQueue<NodePlayer>();
-  openSet.enqueue(start, 0);
-
-  const cameFrom: { [key: string]: NodePlayer } = {};
-  const gScore: { [key: string]: number } = {};
-  gScore[start.toString()] = 0;
-
-  while (!openSet.isEmpty()) {
-    const current = openSet.dequeue() as NodePlayer;
-
-    if (current[0] === end[0] && current[1] === end[1]) {
-      return reconstructPath(cameFrom, current);
-    }
-
-    for (const neighbor of getNeighbors(current, grid)) {
-      const tentativeGScore = gScore[current.toString()] + 1;
-
-      if (
-        // eslint-disable-next-line no-prototype-builtins
-        !gScore.hasOwnProperty(neighbor.toString()) ||
-        tentativeGScore < gScore[neighbor.toString()]
-      ) {
-        cameFrom[neighbor.toString()] = current;
-        gScore[neighbor.toString()] = tentativeGScore;
-        const fScore = tentativeGScore + heuristic(neighbor, end);
-        openSet.enqueue(neighbor, fScore);
-      }
-    }
-  }
-
-  return null;
-}
-
-function getNeighbors(node: NodePlayer, grid: number[][]): NodePlayer[] {
-  const neighbors: NodePlayer[] = [];
-  const directions: number[][] = [
-    [0, 1],
-    [1, 0],
-    [0, -1],
-    [-1, 0],
-    [1, 1],
-    [-1, -1],
-    [1, -1],
-    [-1, 1],
-  ];
-
-  for (const dir of directions) {
-    const [dx, dy] = dir;
-    const neighborX = node[0] + dx;
-    const neighborY = node[1] + dy;
-
-    if (
-      neighborX >= 0 &&
-      neighborX < grid.length &&
-      neighborY >= 0 &&
-      neighborY < grid[0].length &&
-      grid[neighborX][neighborY] === 0
-    ) {
-      neighbors.push([neighborX, neighborY]);
-    }
-  }
-
-  return neighbors;
-}
-
-function reconstructPath(
-  cameFrom: { [key: string]: NodePlayer },
-  current: NodePlayer
-): NodePlayer[] {
-  const path: NodePlayer[] = [current];
-  while (cameFrom[current.toString()]) {
-    current = cameFrom[current.toString()];
-    path.push(current);
-  }
-  return path.reverse();
+function reconstructPath(cameFrom: any, current: any) {
+	const path = [current];
+	while (cameFrom[`${current[0]}-${current[1]}`]) {
+		current = cameFrom[`${current[0]}-${current[1]}`];
+		path.unshift(current);
+	}
+	return path;
 }
