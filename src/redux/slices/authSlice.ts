@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface AuthState {
   isLoading: boolean;
   session: {
+    id: string;
     name: string;
     avatar: string;
   } | null;
@@ -14,14 +15,14 @@ const initialState: AuthState = {
 };
 
 export const authSlice = createSlice({
-  name: "action",
+  name: "auth",
   initialState,
   reducers: {
     setLoading: (state, { payload }) => {
       state.isLoading = payload;
     },
     setSession: (state, { payload }) => {
-      state.session = payload;
+      state.session = { ...state.session, ...payload };
     },
     clearSession: (state) => {
       state.session = null;

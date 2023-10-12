@@ -1,4 +1,6 @@
 import actionSlice from "@/redux/slices/actionSlice";
+import authSlice from "@/redux/slices/authSlice";
+import gamePlaySlice from "@/redux/slices/gamePlaySlice";
 import map from "@/redux/slices/mapSlice";
 import popupQASlice from "@/redux/slices/popupQASlice";
 import videoSlice from "@/redux/slices/videoSlice";
@@ -10,6 +12,8 @@ export const store = configureStore({
     popupQASlice,
     videoSlice,
     actionSlice,
+    gamePlaySlice,
+    authSlice,
   },
 });
 
