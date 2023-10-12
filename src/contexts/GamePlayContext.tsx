@@ -68,7 +68,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 							y: value.resetPosition.y,
 						}));
 						resolve();
-					}, 600);
+					}, 200);
 				}).then(() => {
 					setTimeout(() => {
 						dispatch(setLoading(false));

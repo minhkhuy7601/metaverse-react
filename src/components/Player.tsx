@@ -1,6 +1,6 @@
 import { CELL_SIZE } from "@/constant/config";
 import { PlayerType } from "@/types/player";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const Player: React.FC<PlayerType> = ({
 	x,
@@ -10,6 +10,7 @@ const Player: React.FC<PlayerType> = ({
 	name,
 	avatar,
 }) => {
+	const [animation, setAnimation] = useState("3px");
 	const directionStyle = useMemo(() => {
 		switch (direction) {
 			case "top":
@@ -25,17 +26,19 @@ const Player: React.FC<PlayerType> = ({
 		}
 	}, [direction]);
 
-	const stateStyle = useMemo(() => {
-		if (state === 1) {
-			return "3px";
-		}
-		if (state === 2) {
-			return "-23px";
-		}
-		if (state === 3) {
-			return "-49px";
-		}
-		return "3px";
+	useEffect(() => {
+		(async () => {
+			setAnimation("-23px");
+			setTimeout(() => {
+				setAnimation("-49px");
+			}, 50);
+			setTimeout(() => {
+				setAnimation("-23px");
+			}, 100);
+			setTimeout(() => {
+				setAnimation("3px");
+			}, 150);
+		})();
 	}, [state]);
 
 	return (
@@ -52,7 +55,7 @@ const Player: React.FC<PlayerType> = ({
 				style={{
 					backgroundSize: "80px",
 					backgroundPositionY: directionStyle,
-					backgroundPositionX: stateStyle,
+					backgroundPositionX: animation,
 					backgroundImage: `url(${avatar}.png)`,
 				}}
 				className={`absolute top-0 left-0 w-full h-full`}></div>

@@ -6,7 +6,6 @@ import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import GridTemplate from "./GridTemplate";
-import ModalQA from "./ModalQA";
 import PlayersList from "./PlayersList";
 import VideoFrame from "./VideoFrame";
 const CAMERA_LIMIT = 4;
@@ -96,7 +95,7 @@ const GameContainer = () => {
 					alt="bg"
 					className="absolute top-0 left-0 w-full h-full object-cover"
 				/>
-				<ModalQA />
+
 				<GridTemplate />
 				<PlayersList />
 			</div>
