@@ -3,16 +3,19 @@
 @tailwind utilities;
 
 @keyframes character {
-  0% {
-    background-position-x: "3px";
-  }
-  33% {
-    background-position-x: "-23px";
-  }
-  66% {
-    background-position-x: "-43px";
-  }
+	0% {
+		background-position-x: "3px";
+	}
+	33% {
+		background-position-x: "-23px";
+	}
+	66% {
+		background-position-x: "-43px";
+	}
 }
 .near {
-  box-shadow: 0 0 5px 1px yellow;
+	box-shadow: 0 0 5px 1px yellow;
+}
+.near ~ .tooptip {
+	display: flex !important;
 }

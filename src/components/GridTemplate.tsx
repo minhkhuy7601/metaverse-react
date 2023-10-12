@@ -40,33 +40,43 @@ const GridTemplate = () => {
 					// }}
 					key={index}
 					className={classNames(
-						"aspect-square"
+						"aspect-square relative flex items-center justify-center"
 						// "outline outline-1 outline-white/30",
 						// item.value === 1 && "bg-red-600/50"
 					)}>
 					{currentRoom.actions?.[`${item.y},${item.x}`] && (
-						<img
-							id={currentRoom.actions?.[`${item.y},${item.x}`].id}
-							src={currentRoom.actions?.[`${item.y},${item.x}`].image}
-							className={classNames(
-								"w-fit h-fit object-contain rounded-sm",
-								currentRoom.actions?.[`${item.y},${item.x}`].type ===
-									"POP_UP_QUESTION" && "scale-[1.2]"
-							)}
-							onClick={() => {
-								console.log(
-									"currentRoom.actions?.[`${item.y},${item.x}`].type",
-									currentRoom.actions?.[`${item.y},${item.x}`].type
-								);
-								if (
+						<div className="w-fit h-full relative">
+							<img
+								id={currentRoom.actions?.[`${item.y},${item.x}`].id}
+								src={currentRoom.actions?.[`${item.y},${item.x}`].image}
+								className={classNames(
+									"w-full h-full object-contain rounded-sm",
 									currentRoom.actions?.[`${item.y},${item.x}`].type ===
-									"MEETING"
-								) {
-									dispatch(setShowVideo(true));
-								}
-							}}
-							alt="alt"
-						/>
+										"POP_UP_QUESTION" && "scale-[1.2]"
+								)}
+								onClick={() => {
+									console.log(
+										"currentRoom.actions?.[`${item.y},${item.x}`].type",
+										currentRoom.actions?.[`${item.y},${item.x}`].type
+									);
+									if (
+										currentRoom.actions?.[`${item.y},${item.x}`].type ===
+										"MEETING"
+									) {
+										dispatch(setShowVideo(true));
+									}
+								}}
+								alt="alt"
+							/>
+							<span
+								className={classNames(
+									"hidden left-0 bg-[#ffffffc7] whitespace-nowrap text-xs w-fit absolute -top-8 font-bold p-1 px-2 rounded-full -translate-x-1/3 tooptip",
+									currentRoom.actions?.[`${item.y},${item.x}`].type ===
+										"POP_UP_QUESTION" && "-top-10"
+								)}>
+								{currentRoom.actions?.[`${item.y},${item.x}`].tooltip}
+							</span>
+						</div>
 					)}
 				</div>
 			))}
