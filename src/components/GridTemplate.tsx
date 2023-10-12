@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 const GridTemplate = () => {
-	const { currentRoom } = useGamePlayContext();
+	const { currentRoom, clickPositionMap } = useGamePlayContext();
 	const dispatch = useDispatch();
 	const [renderMap] = useState(() => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,10 +39,14 @@ const GridTemplate = () => {
 					//   setRenderMap(newMap);
 					// }}
 					key={index}
+					onClick={() => {
+						clickPositionMap.current.x = item.y;
+						clickPositionMap.current.y = item.x;
+					}}
 					className={classNames(
-						"aspect-square relative flex items-center justify-center"
-						// "outline outline-1 outline-white/30",
-						// item.value === 1 && "bg-red-600/50"
+						"aspect-square relative flex items-center justify-center",
+						"outline outline-1 outline-white/30",
+						item.value === 1 && "bg-red-600/50"
 					)}>
 					{currentRoom.actions?.[`${item.y},${item.x}`] && (
 						<div className="w-fit h-full relative">

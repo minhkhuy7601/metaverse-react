@@ -6,10 +6,10 @@ import { setQA } from "@/redux/slices/popupQASlice";
 import { RootState } from "@/redux/store";
 import { MapType } from "@/types/map";
 import { MessageType } from "@/types/message";
-import { GamePlayContextProps, PlayerType } from "@/types/player";
+import { GamePlayContextProps, PlayerType, Position } from "@/types/player";
 import { astar } from "@/utils/automove";
 import { KeyPressListener } from "@/utils/event";
-import { getGridCoordinates, isPerformAction, isSolid } from "@/utils/gameplay";
+import { isPerformAction, isSolid } from "@/utils/gameplay";
 import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { onDisconnect, onValue, ref, set } from "firebase/database";
 import { ReactNode, createContext, useEffect, useRef, useState } from "react";
@@ -27,6 +27,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 	const [currentPlayer, setCurrentPlayer] = useState<PlayerType>(
 		{} as PlayerType
 	);
+	const clickPositionMap = useRef<Position>({ x: null, y: null });
 	const [players, setPlayers] = useState<Record<string, any>>({});
 	const [messages, setMessages] = useState<Record<string, MessageType>>({});
 	const qa = useSelector((state: RootState) => state.popupQASlice);
@@ -158,56 +159,46 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentRoom.id]);
-	const handleDirectPlayer = async (event: any) => {
-		if (time) clearInterval(time);
-		const gameContainer = document.querySelector("#game-container");
-		if (!gameContainer) return;
-		const rect = gameContainer.getBoundingClientRect();
+	const handleDirectPlayer = async () => {
+		setTimeout(async () => {
+			if (time) clearInterval(time);
+			const gameContainer = document.querySelector("#game-container");
+			if (!gameContainer) return;
 
-		// eslint-dis
-		const playerId = playerIdRef.current;
-		if (!playerId) return;
-		try {
-			const { x, y } = getGridCoordinates(event.pageX, event.pageY, rect);
-			console.log("x, y", x, y);
-			console.log(
-				"listPlayersRef.current[playerId].x,",
-				listPlayersRef.current[playerId].x
-			);
-			console.log(
-				"listPlayersRef.current[playerId].y,",
-				listPlayersRef.current[playerId].y
-			);
-			console.log("currentRoom.id,", currentRoom.id);
-			const race = await astar(
-				currentRoom.map,
-				[
-					listPlayersRef.current[playerId].x,
-					listPlayersRef.current[playerId].y,
-				],
-				[x, y]
-			);
+			// eslint-dis
+			const playerId = playerIdRef.current;
+			if (!playerId) return;
+			try {
+				const race = await astar(
+					currentRoom.map,
+					[
+						listPlayersRef.current[playerId].x,
+						listPlayersRef.current[playerId].y,
+					],
+					[clickPositionMap.current.x, clickPositionMap.current.y]
+				);
 
-			if (race?.length)
-				for (let i = 0; i < race.length - 1; i++) {
-					const position = race[i];
-					const positionNext = race[i + 1];
-					const newX = positionNext[0] - position[0];
-					const newY = positionNext[1] - position[1];
-					const isMoving = handleArrowPress(newX, newY);
-					await new Promise((resolve, reject) => {
-						time = setTimeout(async () => {
-							if (!isMoving) {
-								handleArrowPress(-newX, -newY);
-								reject(1);
-							}
-							resolve(1);
-						}, 200);
-					});
-				}
-		} catch (error) {
-			console.log(error);
-		}
+				if (race?.length)
+					for (let i = 0; i < race.length - 1; i++) {
+						const position = race[i];
+						const positionNext = race[i + 1];
+						const newX = positionNext[0] - position[0];
+						const newY = positionNext[1] - position[1];
+						const isMoving = handleArrowPress(newX, newY);
+						await new Promise((resolve, reject) => {
+							time = setTimeout(async () => {
+								if (!isMoving) {
+									handleArrowPress(-newX, -newY);
+									reject(1);
+								}
+								resolve(1);
+							}, 200);
+						});
+					}
+			} catch (error) {
+				console.log(error);
+			}
+		}, 0);
 	};
 	const removeClickPlayerMap = () => {
 		const gameContainer = document.querySelector("#game-container");
@@ -342,6 +333,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 		players,
 		currentRoom,
 		currentPlayer,
+		clickPositionMap,
 	};
 
 	return (

@@ -1,3 +1,4 @@
+import { MutableRefObject } from "react";
 import { MapType } from "./map";
 import { MessageType } from "./message";
 
@@ -12,6 +13,8 @@ export interface PlayerType {
 	roomId: string;
 }
 
+export type Position = { x: number | null; y: number | null };
+
 export interface GamePlayContextProps {
 	playerId: string | null;
 	setCurrentPlayer: React.Dispatch<React.SetStateAction<PlayerType>>;
@@ -22,4 +25,5 @@ export interface GamePlayContextProps {
 	players: any;
 	currentRoom: MapType;
 	currentPlayer: PlayerType;
+	clickPositionMap: MutableRefObject<Position>;
 }
