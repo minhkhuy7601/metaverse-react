@@ -4,7 +4,6 @@ import { setShowVideo } from "@/redux/slices/videoSlice";
 import classNames from "classnames";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-
 const GridTemplate = () => {
 	const { currentRoom, clickPositionMap } = useGamePlayContext();
 	const dispatch = useDispatch();
