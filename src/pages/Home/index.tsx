@@ -1,15 +1,12 @@
 import GameContainer from "@/components/GameContainer";
-import { GamePlayProvider } from "@/contexts/GamePlayContext";
 import Layout from "./Layout";
 
 const Home = () => {
-  return (
-    <GamePlayProvider>
-      <Layout>
-        <GameContainer />
-      </Layout>
-    </GamePlayProvider>
-  );
+	return (
+		<Layout>
+			<GameContainer />
+		</Layout>
+	);
 };
 
 export default Home;

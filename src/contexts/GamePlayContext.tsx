@@ -60,6 +60,12 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 							);
 						}
 						setCurrentRoom(CONFIG_MAP[value?.name]);
+						setCurrentPlayer((curr) => ({
+							...curr,
+							roomId: value?.name,
+							x: value.resetPosition.x,
+							y: value.resetPosition.y,
+						}));
 						resolve();
 					}, 600);
 				}).then(() => {
@@ -258,17 +264,31 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 				playerIdRef.current = uid;
 				playerRef.current = refPlayerFirebase;
 				const initPlayer = {
-					roomId: currentRoom.id,
 					id: uid,
+					roomId: currentRoom.id,
 					name: "guest",
 					direction: "down",
 					state: 1,
-					avatar: "character2",
+					avatar: "character1",
 					x: 16,
 					y: 6,
 				};
+
 				set(refPlayerFirebase, initPlayer);
-				setCurrentPlayer(initPlayer);
+				try {
+					const player = JSON?.parse(
+						window.localStorage?.getItem("currentPlayer") || ""
+					);
+
+					if (player.id) {
+						setCurrentPlayer(player);
+					} else {
+						throw "player id null";
+					}
+				} catch (error) {
+					console.log(initPlayer);
+					setCurrentPlayer(initPlayer);
+				}
 				onDisconnect(refPlayerFirebase).remove();
 			} else {
 				console.log("user is logged out");
@@ -288,6 +308,31 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 		initGame();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentRoom.id]);
+
+	useEffect(() => {
+		if (currentPlayer.id) {
+			const refPlayerFirebase = ref(db, `players/${currentPlayer.id}`);
+			window.localStorage.setItem(
+				"currentPlayer",
+				JSON.stringify(currentPlayer)
+			);
+
+			set(refPlayerFirebase, currentPlayer);
+			setCurrentPlayer(currentPlayer);
+			if (currentPlayer) setCurrentRoom(CONFIG_MAP[currentPlayer.roomId]);
+		} else {
+			try {
+				const player = JSON?.parse(
+					window.localStorage?.getItem("currentPlayer") || ""
+				);
+				if (player.id) {
+					setCurrentPlayer(player);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	}, [currentPlayer]);
 
 	const contextValue: GamePlayContextProps = {
 		playerId: playerIdRef.current,

@@ -9,6 +9,7 @@ export interface PlayerType {
 	x: number;
 	state?: number;
 	y: number;
+	roomId: string;
 }
 
 export interface GamePlayContextProps {
