@@ -42,6 +42,7 @@ const MemberBox = () => {
             <Player
               key={item.id}
               direction={item.direction}
+              avatar={item.avatar}
               name={item.name}
               id={item.id}
             />
@@ -52,10 +53,18 @@ const MemberBox = () => {
   );
 };
 
-const Player: React.FC<PlayerType> = ({ name }) => {
+const Player: React.FC<PlayerType> = ({ name, avatar }) => {
+  console.log("avatar", avatar);
   return (
     <div className="flex gap-3 items-center">
-      <div className="min-w-[2rem] h-8 bg-white rounded-full relative">
+      <div
+        style={{
+          backgroundSize: "100px",
+          backgroundPositionY: "-7px",
+          backgroundPositionX: "-102px",
+          backgroundImage: `url('/${avatar}.png')`,
+        }}
+        className="min-w-[2rem] h-8  rounded-full relative border border-white">
         <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-600 rounded-full animate-ping"></span>
         <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-600 rounded-full border-[1px]"></span>
       </div>

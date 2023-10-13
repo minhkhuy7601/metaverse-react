@@ -1,4 +1,5 @@
 import { CELL_SIZE } from "@/constant/config";
+import { useGamePlayContext } from "@/hooks/useGamePlayContext";
 import { PlayerType } from "@/types/player";
 import { useEffect, useMemo, useState } from "react";
 
@@ -9,7 +10,9 @@ const Player: React.FC<PlayerType> = ({
   state,
   name,
   avatar,
+  id,
 }) => {
+  const { currentPlayer } = useGamePlayContext();
   const [animation, setAnimation] = useState("3px");
   const directionStyle = useMemo(() => {
     switch (direction) {
@@ -60,7 +63,10 @@ const Player: React.FC<PlayerType> = ({
         }}
         className={`absolute top-0 left-0 w-full h-full`}></div>
       {/* name */}
-      <p className="absolute -top-1 -translate-y-full left-1/2 font-bold -translate-x-1/2 text-xs bg-gray-800/50 text-white px-2 py-0.1 rounded-lg whitespace-nowrap capitalize">
+      <p className="absolute flex items-center gap-1 -top-1 -translate-y-full left-1/2 font-bold -translate-x-1/2 text-xs bg-gray-800/50 text-white px-2 py-0.1 rounded-lg whitespace-nowrap capitalize">
+        {id === currentPlayer.id && (
+          <div className="w-2 h-2 rounded-full bg-green-500"></div>
+        )}
         {name}
       </p>
     </div>
