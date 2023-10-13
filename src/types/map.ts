@@ -7,6 +7,7 @@ export type MapType = {
   meetingUrl: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   actions?: Record<string, any>;
+  startPosition: { x: number; y: number };
 };
 
 export type ConfigMapType = Record<string, MapType>;
