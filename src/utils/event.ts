@@ -23,8 +23,10 @@ export class KeyPressListener {
         this.callback();
         this.time = setInterval(() => {
           this.callback();
-        }, 180);
+        }, 200);
       }
+    } else {
+      if (this.time) clearInterval(this.time);
     }
   }
 

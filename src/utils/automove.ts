@@ -1,76 +1,85 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export async function astar(grid: any, start: any, end: any) {
-	console.log(start, end);
-	const numRows = grid.length;
-	const numCols = grid[0].length;
-	const openList: any = [];
-	openList.push({ node: start, g: 0, h: heuristic(start, end) });
-	const cameFrom: any = {};
-	const gScore = new Array(numRows)
-		.fill(null)
-		.map(() => new Array(numCols).fill(Infinity));
-	gScore[start[0]][start[1]] = 0;
-	const fScore = new Array(numRows)
-		.fill(null)
-		.map(() => new Array(numCols).fill(Infinity));
-	fScore[start[0]][start[1]] = heuristic(start, end);
+class PriorityQueue<T> {
+  private items: { item: T; priority: number }[];
 
-	const directions = [
-		[-1, 0],
-		[1, 0],
-		[0, -1],
-		[0, 1],
-	];
+  constructor() {
+    this.items = [];
+  }
 
-	while (openList.length > 0) {
-		openList.sort((a: any, b: any) => a.g + a.h - (b.g + b.h));
-		const current = openList.shift().node as any;
+  enqueue(item: T, priority: number): void {
+    this.items.push({ item, priority });
+    this.items.sort((a, b) => a.priority - b.priority);
+  }
 
-		if (current[0] === end[0] && current[1] === end[1]) {
-			return reconstructPath(cameFrom, end);
-		}
+  dequeue(): T | undefined {
+    return this.items.shift()?.item;
+  }
 
-		for (const [dr, dc] of directions) {
-			const newRow = current[0] + dr;
-			const newCol = current[1] + dc;
-
-			if (
-				newRow >= 0 &&
-				newRow < numRows &&
-				newCol >= 0 &&
-				newCol < numCols &&
-				grid[newRow][newCol] !== 1
-			) {
-				const tentativeGScore = gScore[current[0]][current[1]] + 1;
-
-				if (tentativeGScore < gScore[newRow][newCol]) {
-					cameFrom[`${newRow}-${newCol}`] = current;
-					gScore[newRow][newCol] = tentativeGScore;
-					fScore[newRow][newCol] =
-						tentativeGScore + heuristic([newRow, newCol], end);
-					openList.push({
-						node: [newRow, newCol],
-						g: tentativeGScore,
-						h: heuristic([newRow, newCol], end),
-					});
-				}
-			}
-		}
-	}
-
-	return null; // Không tìm thấy đường đi
+  isEmpty(): boolean {
+    return this.items.length === 0;
+  }
 }
 
-function heuristic(a: any, b: any) {
-	// Heuristic (ước tính) dự đoán khoảng cách từ a đến b, thường sử dụng khoảng cách Euclidean
-	return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2);
+type Point = { x: number; y: number };
+type Grid = number[][];
+
+function heuristic(node: Point, goal: Point): number {
+  return Math.abs(node.x - goal.x) + Math.abs(node.y - goal.y);
 }
 
-function reconstructPath(cameFrom: any, current: any) {
-	const path = [current];
-	while (cameFrom[`${current[0]}-${current[1]}`]) {
-		current = cameFrom[`${current[0]}-${current[1]}`];
-		path.unshift(current);
-	}
-	return path;
+export function astar(maze: Grid, start: Point, goal: Point): Point[] | null {
+  const rows = maze.length;
+  const cols = maze[0].length;
+  const openList = new PriorityQueue<Point>();
+  const cameFrom: { [key: string]: Point } = {};
+  const gScore: { [key: string]: number } = {};
+
+  const startKey = `${start.x}-${start.y}`;
+  gScore[startKey] = 0;
+  openList.enqueue(start, 0);
+
+  while (!openList.isEmpty()) {
+    const current = openList.dequeue() as Point;
+
+    if (current.x === goal.x && current.y === goal.y) {
+      const path: Point[] = [];
+      let currentKey = `${current.x}-${current.y}`;
+      while (currentKey in cameFrom) {
+        const node = cameFrom[currentKey];
+        path.push(node);
+        currentKey = `${node.x}-${node.y}`;
+      }
+      path.reverse();
+      return path;
+    }
+
+    for (const [dx, dy] of [
+      [0, 1],
+      [1, 0],
+      [0, -1],
+      [-1, 0],
+    ]) {
+      const neighbor: Point = { x: current.x + dx, y: current.y + dy };
+      if (
+        neighbor.x >= 0 &&
+        neighbor.x < rows &&
+        neighbor.y >= 0 &&
+        neighbor.y < cols &&
+        maze[neighbor.x][neighbor.y] !== 1 &&
+        (maze[neighbor.x][neighbor.y] !== 2 ||
+          maze[neighbor.x][neighbor.y] === maze[goal.x][goal.y])
+      ) {
+        const tentativeGScore = (gScore[`${current.x}-${current.y}`] || 0) + 1;
+        const neighborKey = `${neighbor.x}-${neighbor.y}`;
+
+        if (!(neighborKey in gScore) || tentativeGScore < gScore[neighborKey]) {
+          cameFrom[neighborKey] = current;
+          gScore[neighborKey] = tentativeGScore;
+          const priority = tentativeGScore + heuristic(neighbor, goal);
+          openList.enqueue(neighbor, priority);
+        }
+      }
+    }
+  }
+
+  return null;
 }

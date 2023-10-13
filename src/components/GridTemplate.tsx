@@ -43,16 +43,16 @@ const GridTemplate = () => {
             //   newMap[index].value = 0;
             //   currentRoom.map[item.x][item.y] = 0;
             // } else {
-            //   newMap[index].value = 1;
-            //   currentRoom.map[item.x][item.y] = 1;
+            //   newMap[index].value = 2;
+            //   currentRoom.map[item.x][item.y] = 2;
             // }
             // setRenderMap(newMap);
             // console.log("newMap", currentRoom.map);
           }}
           className={classNames(
-            "aspect-square relative flex items-center justify-center"
-            // "outline outline-1 outline-white/30",
-            // item.value === 1 && "bg-red-600/50"
+            "aspect-square relative flex items-center justify-center",
+            "outline outline-1 outline-white/30",
+            item.value === 1 && "bg-red-600/50"
           )}>
           {currentRoom.actions?.[`${item.y},${item.x}`] && (
             <div className="w-fit h-full relative">
@@ -85,14 +85,16 @@ const GridTemplate = () => {
                 }}
                 alt="alt"
               />
-              <span
-                className={classNames(
-                  "hidden left-0 bg-[#ffffffc7] whitespace-nowrap text-xs w-fit absolute -top-8 font-bold p-1 px-2 rounded-full -translate-x-1/3 tooptip",
-                  currentRoom.actions?.[`${item.y},${item.x}`].type ===
-                    "POP_UP_QUESTION" && "-top-10"
-                )}>
-                {currentRoom.actions?.[`${item.y},${item.x}`].tooltip}
-              </span>
+              {currentRoom.actions?.[`${item.y},${item.x}`].tooltip && (
+                <span
+                  className={classNames(
+                    "hidden left-0 bg-[#ffffffc7] whitespace-nowrap text-xs w-fit absolute -top-8 font-bold p-1 px-2 rounded-full -translate-x-1/3 tooptip",
+                    currentRoom.actions?.[`${item.y},${item.x}`].type ===
+                      "POP_UP_QUESTION" && "-top-10"
+                  )}>
+                  {currentRoom.actions?.[`${item.y},${item.x}`].tooltip}
+                </span>
+              )}
             </div>
           )}
         </div>

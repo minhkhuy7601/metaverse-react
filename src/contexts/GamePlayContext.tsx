@@ -7,7 +7,7 @@ import { RootState } from "@/redux/store";
 import { MapType } from "@/types/map";
 import { MessageType } from "@/types/message";
 import { GamePlayContextProps, PlayerType, Position } from "@/types/player";
-import { astar } from "@/utils/automove";
+import { Point, astar } from "@/utils/automove";
 import { KeyPressListener } from "@/utils/event";
 import { isPerformAction, isSolid } from "@/utils/gameplay";
 import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
@@ -167,23 +167,31 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 
       // eslint-dis
       const playerId = playerIdRef.current;
+
       if (!playerId) return;
+
       try {
-        const race = await astar(
-          currentRoom.map,
-          [
-            listPlayersRef.current[playerId].x,
-            listPlayersRef.current[playerId].y,
-          ],
-          [clickPositionMap.current.x, clickPositionMap.current.y]
-        );
+        const start: Point = {
+          x: listPlayersRef.current[playerId].y,
+          y: listPlayersRef.current[playerId].x,
+        };
+        const goal: Point = {
+          x: clickPositionMap.current.y as number,
+          y: clickPositionMap.current.x as number,
+        };
+        const race = astar(currentRoom.map, start, goal);
+        console.log("race", race);
+
+        if (race && race.length) {
+          race.push(goal);
+        }
 
         if (race?.length)
           for (let i = 0; i < race.length - 1; i++) {
             const position = race[i];
             const positionNext = race[i + 1];
-            const newX = positionNext[0] - position[0];
-            const newY = positionNext[1] - position[1];
+            const newX = positionNext.y - position.y;
+            const newY = positionNext.x - position.x;
             const isMoving = handleArrowPress(newX, newY);
             await new Promise((resolve, reject) => {
               time = setTimeout(async () => {
