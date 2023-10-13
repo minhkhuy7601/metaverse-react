@@ -19,12 +19,13 @@ const ChatBox = () => {
       ...value,
     }));
   }, [messages]);
-  console.log("messages", messages);
   const dispatch = useDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const activeAction = useSelector(
     (state: RootState) => state.actionSlice.activeAction
   );
+
+  const boxChatRef = useRef<HTMLDivElement | null>(null);
 
   const handleSubmit = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
     e.preventDefault();
@@ -42,6 +43,10 @@ const ChatBox = () => {
         },
       });
       inputRef.current.value = "";
+      setTimeout(() => {
+        if (boxChatRef.current)
+          boxChatRef.current.scrollTop = boxChatRef.current.scrollHeight;
+      });
     }
   };
 
@@ -64,7 +69,9 @@ const ChatBox = () => {
         </button>
       </div>
       <div className="w-full h-[calc(100%-3.5rem)] px-6 flex flex-col">
-        <div className="flex-grow overflow-y-auto py-4 flex flex-col">
+        <div
+          className="flex-grow overflow-y-auto py-4 flex flex-col"
+          ref={boxChatRef}>
           {messagesArr?.map((item, index) => {
             if (
               index > 0 &&

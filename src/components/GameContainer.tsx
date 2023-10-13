@@ -21,7 +21,7 @@ const GameContainer = () => {
     if (container) {
       container.addEventListener("wheel", (e) => {
         if (e.deltaY > 0) {
-          setScale((sc) => (sc - 0.06 < 1 ? 1 : sc - 0.1));
+          setScale((sc) => (sc - 0.06 < 0.8 ? 0.8 : sc - 0.1));
         } else {
           setScale((sc) => (sc + 0.1 > 2 ? 2 : sc + 0.1));
         }
