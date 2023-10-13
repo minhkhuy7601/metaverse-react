@@ -7,7 +7,7 @@ export interface ActionState {
 }
 
 const initialState: ActionState = {
-  activeAction: "CHAT_BOX",
+  activeAction: "MEMBER",
   isShowAdjustingAvatarModal: false,
   isShowEditNameModal: false,
 };

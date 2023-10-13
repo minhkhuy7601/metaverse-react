@@ -22,7 +22,7 @@ export const CONFIG_MAP: ConfigMapType = {
       "https://meetings.vonage.com/?room_token=639474131&participant_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjkyOThlNzZlLTNkMDQtNDM0MS05MDIyLTQ2MTY2MmFiNmU0OCJ9.eyJwYXJ0aWNpcGFudElkIjoiMGQyNGJmMTktZWM4Yi00NTE0LTk4YWQtMjI2OWJjNDZiODQ2IiwiaWF0IjoxNjk2OTMwNzkwfQ.Hme_VY6uLD409ULKyz4jKbt2jE3hDildlfrcO44dNOc",
     actions: {
       "17,6": {
-        id: "door_to_room",
+        id: "door_to_room1",
         type: "CHANGE_ROOM",
         value: {
           name: "room1",
@@ -36,7 +36,7 @@ export const CONFIG_MAP: ConfigMapType = {
         label: "Room 1",
       },
       "13,6": {
-        id: "door_to_room",
+        id: "door_to_room2",
         type: "CHANGE_ROOM",
         value: {
           name: "room2",
@@ -50,7 +50,7 @@ export const CONFIG_MAP: ConfigMapType = {
         styling: "scale-150",
       },
       "11,8": {
-        id: "door_to_room",
+        id: "door_to_room3",
         type: "CHANGE_ROOM",
         value: {
           name: "room3",
@@ -64,7 +64,7 @@ export const CONFIG_MAP: ConfigMapType = {
         styling: "scale-150",
       },
       "10,10": {
-        id: "door_to_room",
+        id: "door_to_room4",
         type: "CHANGE_ROOM",
         value: {
           name: "room4",
@@ -78,7 +78,7 @@ export const CONFIG_MAP: ConfigMapType = {
         styling: "scale-150",
       },
       "12,12": {
-        id: "door_to_room",
+        id: "door_to_room5",
         type: "CHANGE_ROOM",
         value: {
           name: "room5",
@@ -92,7 +92,7 @@ export const CONFIG_MAP: ConfigMapType = {
         styling: "scale-150",
       },
       "17,12": {
-        id: "door_to_room",
+        id: "door_to_room6",
         type: "CHANGE_ROOM",
         value: {
           name: "room6",
@@ -106,7 +106,7 @@ export const CONFIG_MAP: ConfigMapType = {
         styling: "scale-150",
       },
       "19,10": {
-        id: "door_to_room",
+        id: "door_to_room7",
         type: "CHANGE_ROOM",
         value: {
           name: "room7",
@@ -121,7 +121,7 @@ export const CONFIG_MAP: ConfigMapType = {
       },
       "15,9": {
         id: "door_to_room",
-        tooltip: "Classroom",
+        tooltip: "Back to school",
         type: "CHANGE_ROOM",
         value: {
           name: "school",
