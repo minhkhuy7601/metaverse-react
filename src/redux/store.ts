@@ -1,5 +1,6 @@
 import actionSlice from "@/redux/slices/actionSlice";
 import map from "@/redux/slices/mapSlice";
+import meetingRoomSlice from "@/redux/slices/meetingRoomSlice";
 import popupQASlice from "@/redux/slices/popupQASlice";
 import videoSlice from "@/redux/slices/videoSlice";
 import { configureStore } from "@reduxjs/toolkit";
@@ -10,6 +11,7 @@ export const store = configureStore({
     popupQASlice,
     videoSlice,
     actionSlice,
+    meetingRoomSlice,
   },
 });
 

@@ -2,6 +2,7 @@
 import { CONFIG_MAP } from "@/constant/config";
 import { auth, db } from "@/lib/firebase";
 import { setLoading } from "@/redux/slices/mapSlice";
+import { setRoomId } from "@/redux/slices/meetingRoomSlice";
 import { setQA } from "@/redux/slices/popupQASlice";
 import { RootState } from "@/redux/store";
 import { MapType } from "@/types/map";
@@ -42,6 +43,11 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       }
     }
   };
+
+  useEffect(() => {
+    dispatch(setRoomId(currentRoom.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRoom]);
 
   async function handleActionPlayer(type: string, value: any) {
     switch (type) {

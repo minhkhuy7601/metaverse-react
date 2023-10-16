@@ -1,6 +1,6 @@
 import { COLS } from "@/constant/config";
 import { useGamePlayContext } from "@/hooks/useGamePlayContext";
-import { setShowVideo } from "@/redux/slices/videoSlice";
+import { setOpenMeeting } from "@/redux/slices/meetingRoomSlice";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -24,6 +24,13 @@ const GridTemplate = () => {
     setRenderMap(temp);
   }, [currentRoom.map]);
 
+  const handleClickItem = (x: number, y: number) => {
+    if (currentRoom.actions?.[`${y},${x}`].type === "JOIN_MEETING") {
+      // alert("show");
+      dispatch(setOpenMeeting(true));
+    }
+  };
+
   return (
     <div
       style={{
@@ -43,16 +50,16 @@ const GridTemplate = () => {
             //   newMap[index].value = 0;
             //   currentRoom.map[item.x][item.y] = 0;
             // } else {
-            //   newMap[index].value = 2;
-            //   currentRoom.map[item.x][item.y] = 2;
+            //   newMap[index].value = 1;
+            //   currentRoom.map[item.x][item.y] = 1;
             // }
             // setRenderMap(newMap);
             // console.log("newMap", currentRoom.map);
           }}
           className={classNames(
-            "aspect-square relative flex items-center justify-center",
-            "outline outline-1 outline-white/30",
-            item.value === 1 && "bg-red-600/50"
+            "aspect-square relative flex items-center justify-center"
+            // "outline outline-1 outline-white/30",
+            // item.value === 1 && "bg-red-600/50"
           )}>
           {currentRoom.actions?.[`${item.y},${item.x}`] && (
             <div className="w-fit h-full relative">
@@ -72,16 +79,7 @@ const GridTemplate = () => {
                   currentRoom.actions?.[`${item.y},${item.x}`]?.styling
                 )}
                 onClick={() => {
-                  console.log(
-                    "currentRoom.actions?.[`${item.y},${item.x}`].type",
-                    currentRoom.actions?.[`${item.y},${item.x}`].type
-                  );
-                  if (
-                    currentRoom.actions?.[`${item.y},${item.x}`].type ===
-                    "MEETING"
-                  ) {
-                    dispatch(setShowVideo(true));
-                  }
+                  handleClickItem(item.x, item.y);
                 }}
                 alt="alt"
               />

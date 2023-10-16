@@ -1,3 +1,4 @@
+import meeting from "@/assets/items/clock.png";
 import teleport from "@/assets/items/teleport.gif";
 import teleport1 from "@/assets/items/teleport1.gif";
 import lobby from "@/assets/maps/lobby.jpg";
@@ -183,6 +184,12 @@ export const CONFIG_MAP: ConfigMapType = {
         label: "Leave room",
         styling: "scale-150",
       },
+      "15,10": {
+        id: "join_meeting",
+        type: "JOIN_MEETING",
+        image: meeting,
+        styling: "scale-150",
+      },
     },
   },
   room2: {
@@ -207,6 +214,12 @@ export const CONFIG_MAP: ConfigMapType = {
         },
         image: teleport1,
         label: "Leave room",
+        styling: "scale-150",
+      },
+      "15,10": {
+        id: "join_meeting",
+        type: "JOIN_MEETING",
+        image: meeting,
         styling: "scale-150",
       },
     },
@@ -235,6 +248,12 @@ export const CONFIG_MAP: ConfigMapType = {
         label: "Leave room",
         styling: "scale-150",
       },
+      "15,10": {
+        id: "join_meeting",
+        type: "JOIN_MEETING",
+        image: meeting,
+        styling: "scale-150",
+      },
     },
   },
   room4: {
@@ -259,6 +278,12 @@ export const CONFIG_MAP: ConfigMapType = {
         },
         image: teleport1,
         label: "Leave room",
+        styling: "scale-150",
+      },
+      "15,10": {
+        id: "join_meeting",
+        type: "JOIN_MEETING",
+        image: meeting,
         styling: "scale-150",
       },
     },
@@ -287,6 +312,12 @@ export const CONFIG_MAP: ConfigMapType = {
         label: "Leave room",
         styling: "scale-150",
       },
+      "15,10": {
+        id: "join_meeting",
+        type: "JOIN_MEETING",
+        image: meeting,
+        styling: "scale-150",
+      },
     },
   },
   room6: {
@@ -313,6 +344,12 @@ export const CONFIG_MAP: ConfigMapType = {
         label: "Leave room",
         styling: "scale-150",
       },
+      "15,10": {
+        id: "join_meeting",
+        type: "JOIN_MEETING",
+        image: meeting,
+        styling: "scale-150",
+      },
     },
   },
   room7: {
@@ -337,6 +374,12 @@ export const CONFIG_MAP: ConfigMapType = {
         },
         image: teleport1,
         label: "Leave room",
+        styling: "scale-150",
+      },
+      "15,10": {
+        id: "join_meeting",
+        type: "JOIN_MEETING",
+        image: meeting,
         styling: "scale-150",
       },
     },

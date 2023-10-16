@@ -19,7 +19,7 @@ class PriorityQueue<T> {
   }
 }
 
-type Point = { x: number; y: number };
+export type Point = { x: number; y: number };
 type Grid = number[][];
 
 function heuristic(node: Point, goal: Point): number {
