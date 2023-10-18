@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CONFIG_MAP } from "@/constant/config";
 import { auth, db } from "@/lib/firebase";
+import { setShowQuestionModal } from "@/redux/slices/actionSlice";
 import { setLoading } from "@/redux/slices/mapSlice";
 import { setRoomId } from "@/redux/slices/meetingRoomSlice";
-import { setQA } from "@/redux/slices/popupQASlice";
-import { RootState } from "@/redux/store";
 import { MapType } from "@/types/map";
 import { MessageType } from "@/types/message";
 import { GamePlayContextProps, PlayerType, Position } from "@/types/player";
@@ -14,7 +13,7 @@ import { isPerformAction, isSolid } from "@/utils/gameplay";
 import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { onDisconnect, onValue, ref, set } from "firebase/database";
 import { ReactNode, createContext, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 export const GamePlayContext = createContext<GamePlayContextProps | undefined>(
   undefined
 );
@@ -31,16 +30,12 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
   const clickPositionMap = useRef<Position>({ x: null, y: null });
   const [players, setPlayers] = useState<Record<string, any>>({});
   const [messages, setMessages] = useState<Record<string, MessageType>>({});
-  const qa = useSelector((state: RootState) => state.popupQASlice);
   const currentValueQA = useRef<any>(null);
   let time: NodeJS.Timeout | null = null;
-  const listennerPressKeyX = (event: any) => {
+  const listenerPressKeyX = (event: any) => {
     // Check if the pressed key is the "X" key (key code 88 or key identifier "KeyX")
-
     if (event.keyCode === 88 || event.key === "x" || event.key === "X") {
-      if (!qa.question?.length) {
-        if (currentValueQA.current) dispatch(setQA(currentValueQA.current));
-      }
+      dispatch(setShowQuestionModal(true));
     }
   };
 
@@ -86,7 +81,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       case "POP_UP_QUESTION": {
         currentValueQA.current = value;
         removeClickPlayerMap();
-        document.addEventListener("keydown", listennerPressKeyX);
+        document.addEventListener("keydown", listenerPressKeyX);
         break;
       }
 
@@ -134,7 +129,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       }
 
       set(playerRef.current, listPlayersRef.current[playerId]);
-      document.removeEventListener("keydown", listennerPressKeyX);
+      document.removeEventListener("keydown", listenerPressKeyX);
       isPerformAction(currentRoom, newX, newY, handleActionPlayer);
       return true;
     } else {
@@ -227,12 +222,12 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     gameContainer.addEventListener("click", handleDirectPlayer);
   };
   useEffect(() => {
-    if (!qa.question.length) addClickPlayerMap();
+    addClickPlayerMap();
     return () => {
       removeClickPlayerMap();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRoom.id, qa]);
+  }, [currentRoom.id]);
   function initGame() {
     const allPlayersRef = ref(db, `players`);
     onValue(allPlayersRef, (snapshot) => {

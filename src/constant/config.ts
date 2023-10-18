@@ -1,4 +1,5 @@
 import meeting from "@/assets/items/clock.png";
+import mascot from "@/assets/items/mascot.png";
 import teleport from "@/assets/items/teleport.gif";
 import teleport1 from "@/assets/items/teleport1.gif";
 import lobby from "@/assets/maps/lobby.jpg";
@@ -147,7 +148,7 @@ export const CONFIG_MAP: ConfigMapType = {
     actions: {
       "14,9": {
         id: "door_to_room",
-        tooltip: "Go to lobby",
+        // tooltip: "Go to lobby",
         type: "CHANGE_ROOM",
         value: {
           name: "lobby",
@@ -157,6 +158,12 @@ export const CONFIG_MAP: ConfigMapType = {
           },
         },
         image: teleport,
+      },
+      "13,8": {
+        id: "popup",
+        tooltip: "Welcome",
+        type: "POP_UP_QUESTION",
+        image: mascot,
       },
     },
   },

@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import GridTemplate from "./GridTemplate";
 import PlayersList from "./PlayersList";
-import VideoFrame from "./VideoFrame";
 const CAMERA_LIMIT = 4;
 const GameContainer = () => {
   const { currentRoom, players, playerId } = useGamePlayContext();
@@ -77,7 +76,6 @@ const GameContainer = () => {
         "w-full h-full relative top-0 flex justify-center items-center duration-500 hover:cursor-pointer",
         isLoading ? "invisible opacity-0" : "visible opacity-100"
       )}>
-      <VideoFrame />
       <div
         id="game-container"
         style={{
