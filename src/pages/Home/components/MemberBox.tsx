@@ -45,6 +45,9 @@ const MemberBox = () => {
               avatar={item.avatar}
               name={item.name}
               id={item.id}
+              x={item.x}
+              y={item.y}
+              roomId={item.roomId}
             />
           ))}
         </div>

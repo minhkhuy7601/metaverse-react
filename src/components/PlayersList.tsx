@@ -22,6 +22,7 @@ const PlayersList = () => {
           state={item.state}
           avatar={item.avatar}
           direction={item.direction}
+          roomId={item.roomId}
         />
       ))}
     </>
