@@ -15,7 +15,6 @@ const GameContainer = () => {
   const [scale, setScale] = useState(1);
   const [cameraPosition, setCameraPosition] = useState({ x: 0, y: 0 });
 
-  // console.log("currentRoom", currentRoom);
   useEffect(() => {
     const container = document.getElementById("container");
     if (container) {
@@ -68,11 +67,6 @@ const GameContainer = () => {
   return (
     <div
       id="container"
-      style={
-        {
-          // transform: `scale(${scale})`,
-        }
-      }
       className={classNames(
         "w-full h-full relative top-0 flex justify-center items-center duration-500 hover:cursor-pointer",
         isLoading ? "invisible opacity-0" : "visible opacity-100"

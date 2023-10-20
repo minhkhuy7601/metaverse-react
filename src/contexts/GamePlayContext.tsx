@@ -1,19 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CONFIG_MAP } from "@/constant/config";
 import { auth, db } from "@/lib/firebase";
-import { setShowQuestionModal } from "@/redux/slices/actionSlice";
+import {
+  setLoadingGame,
+  setShowQuestionModal,
+} from "@/redux/slices/actionSlice";
 import { setLoading } from "@/redux/slices/mapSlice";
 import { setRoomId } from "@/redux/slices/meetingRoomSlice";
 import { MapType } from "@/types/map";
 import { MessageType } from "@/types/message";
 import { GamePlayContextProps, PlayerType, Position } from "@/types/player";
+import { simulateFetching } from "@/utils";
 import { Point, astar } from "@/utils/automove";
+import { isInputDateMoreThanSpecifiedMinutesPastCurrentDate } from "@/utils/date";
 import { KeyPressListener } from "@/utils/event";
 import { isPerformAction, isSolid } from "@/utils/gameplay";
 import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { onDisconnect, onValue, ref, set } from "firebase/database";
+import {
+  child,
+  get,
+  onDisconnect,
+  onValue,
+  ref,
+  remove,
+  set,
+} from "firebase/database";
 import { ReactNode, createContext, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+
 export const GamePlayContext = createContext<GamePlayContextProps | undefined>(
   undefined
 );
@@ -75,7 +89,6 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
             dispatch(setLoading(false));
           }, 200);
         });
-
         break;
       }
       case "POP_UP_QUESTION": {
@@ -84,7 +97,6 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
         document.addEventListener("keydown", listenerPressKeyX);
         break;
       }
-
       default:
         break;
     }
@@ -98,7 +110,6 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
   }
   function handleArrowPress(xChange = 0, yChange = 0) {
     const playerId = playerIdRef.current;
-
     if (!playerId) return;
     if (!listPlayersRef.current[playerId]) return;
 
@@ -160,15 +171,13 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRoom.id]);
+
   const handleDirectPlayer = async () => {
     setTimeout(async () => {
       if (time) clearInterval(time);
       const gameContainer = document.querySelector("#game-container");
       if (!gameContainer) return;
-
-      // eslint-dis
       const playerId = playerIdRef.current;
-
       if (!playerId) return;
 
       try {
@@ -181,7 +190,6 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
           y: clickPositionMap.current.x as number,
         };
         const race = astar(currentRoom.map, start, goal);
-        console.log("race", race);
 
         if (race && race.length) {
           race.push(goal);
@@ -230,10 +238,46 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
   }, [currentRoom.id]);
   function initGame() {
     const allPlayersRef = ref(db, `players`);
-    onValue(allPlayersRef, (snapshot) => {
-      //   console.log("snapshot", snapshot);
+    const allMessagesRef = ref(db, `messages/${currentRoom.id}`);
 
+    // remove old message
+    get(child(ref(db), `messages/${currentRoom.id}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(new Date());
+          const resSnapshot = snapshot.val();
+          Object.entries(resSnapshot).forEach((item: any) => {
+            const messageTimestamp = new Date(item[1].created_date);
+            const specifiedMinutes = 30;
+            const isMoreThanSpecifiedMinutesPast =
+              isInputDateMoreThanSpecifiedMinutesPastCurrentDate(
+                messageTimestamp,
+                specifiedMinutes
+              );
+            if (isMoreThanSpecifiedMinutesPast) {
+              const specificMessage = ref(
+                db,
+                `messages/${currentRoom.id}/${item[0]}`
+              );
+              remove(specificMessage);
+            }
+          });
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    onValue(allMessagesRef, (snapshot) => {
+      const messageSnapshot = snapshot.val() || {};
+      setMessages(messageSnapshot);
+    });
+    onValue(allPlayersRef, (snapshot) => {
       const playersSnapshot = snapshot.val() || {};
+      simulateFetching(2).then(() => {
+        dispatch(setLoadingGame(false));
+      });
       Object.entries(playersSnapshot).forEach(([id, value]: any) => {
         if (value.roomId !== currentRoom.id) {
           delete playersSnapshot[id];
@@ -245,15 +289,6 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     });
     // initHandleMoveOnClick();
   }
-
-  useEffect(() => {
-    const allMessagesRef = ref(db, `messages/${currentRoom.id}`);
-    onValue(allMessagesRef, (snapshot) => {
-      const messageSnapshot = snapshot.val() || {};
-      console.log("messageSnapshot", messageSnapshot);
-      setMessages(messageSnapshot);
-    });
-  }, [currentRoom.id]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {

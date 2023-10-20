@@ -9,7 +9,7 @@ export interface ActionState {
 }
 
 const initialState: ActionState = {
-  isLoadingGame: false,
+  isLoadingGame: true,
   activeAction: "MEMBER",
   isShowAdjustingAvatarModal: false,
   isShowEditNameModal: false,

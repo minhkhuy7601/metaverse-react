@@ -1,4 +1,7 @@
+import ScreenLoading from "@/components/ScreenLoading";
+import { RootState } from "@/redux/store";
 import { ReactNode } from "react";
+import { useSelector } from "react-redux";
 import ChatBox from "./components/ChatBox";
 import EditAvatarModal from "./components/EditAvatarModal";
 import EditNameModal from "./components/EditNameModal";
@@ -11,6 +14,11 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const isLoadingGame = useSelector(
+    (state: RootState) => state.actionSlice.isLoadingGame
+  );
+
+  if (isLoadingGame) return <ScreenLoading />;
   return (
     <>
       <EditNameModal />

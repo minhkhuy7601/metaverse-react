@@ -32,10 +32,10 @@ const ChatBox = () => {
     if (inputRef.current && inputRef.current.value) {
       const messageListRef = ref(db, `messages/${currentRoom.id}`);
       const newMessageRef = push(messageListRef);
-      const currentDate = new Date().toJSON().slice(0, 10);
+      const currentDate = new Date();
       set(newMessageRef, {
         message: inputRef.current.value,
-        created_date: currentDate,
+        created_date: currentDate.toString(),
         sent_by: {
           name: currentPlayer.name,
           id: currentPlayer.id,
@@ -126,7 +126,9 @@ const Message: React.FC<MessageType> = ({ message, created_date, sent_by }) => {
       <div className="w-full flex-grow">
         <div className="w-full flex justify-between items-center">
           <p className="font-semibold text-gray-400">{sent_by.name}</p>
-          <p className="text-xs text-gray-500 font-medium">{created_date}</p>
+          <p className="text-xs text-gray-500 font-medium">
+            {new Date(created_date).toLocaleString()}
+          </p>
         </div>
         <p className="text-white">{message}</p>
       </div>
