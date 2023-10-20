@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { CELL_SIZE } from "@/constant/config";
+import { backgroundMapImage } from "@/constant/maps/background";
 import { useGamePlayContext } from "@/hooks/useGamePlayContext";
 import { RootState } from "@/redux/store";
 import classNames from "classnames";
@@ -88,11 +89,16 @@ const GameContainer = () => {
         className={classNames(
           `bg-no-repeat bg-center bg-cover relative duration-[0.5s] transition-all ease-linear`
         )}>
-        <img
-          src={currentRoom.image}
-          alt="bg"
-          className="absolute top-0 left-0 w-full h-full object-cover"
-        />
+        {backgroundMapImage.map((item) => (
+          <img
+            src={item.image}
+            alt="bg"
+            className={classNames(
+              "absolute top-0 left-0 w-full h-full object-cover",
+              currentRoom.type === item.id ? "visible" : "invisible"
+            )}
+          />
+        ))}
 
         <GridTemplate />
         <PlayersList />

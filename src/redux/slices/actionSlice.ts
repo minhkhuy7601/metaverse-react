@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface ActionState {
+  isLoadingGame: boolean;
   activeAction: "CHAT_BOX" | "MEMBER" | null;
   isShowAdjustingAvatarModal: boolean;
   isShowEditNameModal: boolean;
@@ -8,6 +9,7 @@ export interface ActionState {
 }
 
 const initialState: ActionState = {
+  isLoadingGame: false,
   activeAction: "MEMBER",
   isShowAdjustingAvatarModal: false,
   isShowEditNameModal: false,
@@ -18,6 +20,9 @@ export const actionState = createSlice({
   name: "action",
   initialState,
   reducers: {
+    setLoadingGame: (state, { payload }) => {
+      state.isLoadingGame = payload;
+    },
     setActionToChatBox: (state) => {
       state.activeAction = "CHAT_BOX";
     },
@@ -46,6 +51,7 @@ export const {
   setShowAdjustingAvatarModal,
   setShowEditNameModal,
   setShowQuestionModal,
+  setLoadingGame,
 } = actionState.actions;
 
 export default actionState.reducer;
