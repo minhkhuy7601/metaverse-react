@@ -39,7 +39,6 @@ const Tool = () => {
         </div>
         <div
           onClick={() => {
-            console.log("setShowEditNameModal");
             dispatch(setShowEditNameModal(true));
           }}
           className="relative w-[70%] h-full py-1 px-2 hover:bg-indigo-200/30 duration-300 cursor-pointer rounded-e-md">

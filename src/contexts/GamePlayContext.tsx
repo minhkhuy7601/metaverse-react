@@ -7,6 +7,7 @@ import {
 } from "@/redux/slices/actionSlice";
 import { setLoading } from "@/redux/slices/mapSlice";
 import { setRoomId } from "@/redux/slices/meetingRoomSlice";
+import { RootState } from "@/redux/store";
 import { MapType } from "@/types/map";
 import { MessageType } from "@/types/message";
 import { GamePlayContextProps, PlayerType, Position } from "@/types/player";
@@ -26,7 +27,7 @@ import {
   set,
 } from "firebase/database";
 import { ReactNode, createContext, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export const GamePlayContext = createContext<GamePlayContextProps | undefined>(
   undefined
@@ -34,6 +35,9 @@ export const GamePlayContext = createContext<GamePlayContextProps | undefined>(
 
 export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
+  const isLoadingGame = useSelector(
+    (state: RootState) => state.actionSlice.isLoadingGame
+  );
   const playerIdRef = useRef<string | null>(null);
   const playerRef = useRef<any>(null);
   const listPlayersRef = useRef<any>(null);
@@ -225,6 +229,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 
   const addClickPlayerMap = () => {
     const gameContainer = document.querySelector("#game-container");
+
     if (!gameContainer) return;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     gameContainer.addEventListener("click", handleDirectPlayer);
@@ -235,7 +240,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       removeClickPlayerMap();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRoom.id]);
+  }, [currentRoom.id, isLoadingGame]);
   function initGame() {
     const allPlayersRef = ref(db, `players`);
     const allMessagesRef = ref(db, `messages/${currentRoom.id}`);
@@ -244,7 +249,6 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     get(child(ref(db), `messages/${currentRoom.id}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          console.log(new Date());
           const resSnapshot = snapshot.val();
           Object.entries(resSnapshot).forEach((item: any) => {
             const messageTimestamp = new Date(item[1].created_date);
@@ -263,7 +267,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
             }
           });
         } else {
-          console.log("No data available");
+          // console.log("No data available");
         }
       })
       .catch((error) => {
@@ -326,7 +330,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
         }
         onDisconnect(refPlayerFirebase).remove();
       } else {
-        console.log("user is logged out");
+        // console.log("user is logged out");
       }
     });
 
@@ -354,7 +358,6 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 
       set(refPlayerFirebase, currentPlayer);
       setCurrentPlayer(currentPlayer);
-      console.log("currentPlayer", currentPlayer);
       if (currentPlayer) setCurrentRoom(CONFIG_MAP[currentPlayer.roomId]);
     } else {
       try {

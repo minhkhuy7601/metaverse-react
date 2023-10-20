@@ -21,6 +21,7 @@ const MeetingRoom = () => {
           <JaaSMeeting
             appId={import.meta.env.VITE_APP_JITSI_ID}
             roomName={roomId as string}
+            // jwt={import.meta.env.VITE_APP_JITSI_JWT}
             configOverwrite={{
               disableThirdPartyRequests: true,
               disableLocalVideoFlip: true,

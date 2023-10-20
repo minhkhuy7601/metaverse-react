@@ -51,9 +51,9 @@ const GameContainer = () => {
           players[playerId].y >= centerY - CAMERA_LIMIT &&
           players[playerId].y <= centerY + CAMERA_LIMIT;
         if (isPlayerInRect) {
-          console.log("in");
+          // console.log("in");
         } else {
-          console.log("out");
+          // console.log("out");
           setCameraPosition({ x, y });
         }
       } else {
@@ -85,6 +85,7 @@ const GameContainer = () => {
         )}>
         {backgroundMapImage.map((item) => (
           <img
+            key={item.id}
             src={item.image}
             alt="bg"
             className={classNames(

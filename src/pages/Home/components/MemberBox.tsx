@@ -12,7 +12,6 @@ const MemberBox = () => {
   const playersArr = useMemo<PlayerType[]>(() => {
     return Object.entries(players).map((item) => item[1]) as PlayerType[];
   }, [players]);
-  console.log("players", playersArr);
   const dispatch = useDispatch();
   const activeAction = useSelector(
     (state: RootState) => state.actionSlice.activeAction
@@ -57,7 +56,6 @@ const MemberBox = () => {
 };
 
 const Player: React.FC<PlayerType> = ({ name, avatar }) => {
-  console.log("avatar", avatar);
   return (
     <div className="flex gap-3 items-center">
       <div

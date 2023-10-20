@@ -19,7 +19,6 @@ export default function EditAvatarModal() {
   const isOpen = useSelector(
     (state: RootState) => state.actionSlice.isShowAdjustingAvatarModal
   );
-  console.log("isOpen", isOpen);
 
   const onUpdateAvatar = () => {
     if (!playerId) return;
