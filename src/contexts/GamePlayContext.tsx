@@ -80,7 +80,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
       }
       case "POP_UP_QUESTION": {
         currentValueQA.current = value;
-        removeClickPlayerMap();
+        // removeClickPlayerMap();
         document.addEventListener("keydown", listenerPressKeyX);
         break;
       }
