@@ -41,15 +41,12 @@ const Recording = () => {
                 onClick={() => {
                   navigator.mediaDevices
                     .getUserMedia({ video: true, audio: true })
-                    .then(function (stream) {
-                      console.log("ok");
-                      // Media access granted, 'stream' contains the media data
+                    .then(function () {
+                      startRecording();
                     })
-                    .catch(function (error) {
-                      // Handle errors, such as permission denied by the user
-                      console.error("Error accessing media devices: ", error);
+                    .catch(function () {
+                      alert("Can not access media devices");
                     });
-                  //   startRecording();
                 }}
                 className="h-full aspect-square bg-indigo-100/10 rounded-full flex items-center justify-center text-red-400">
                 <BsFillRecordCircleFill />
