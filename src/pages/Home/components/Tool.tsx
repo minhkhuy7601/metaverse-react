@@ -20,7 +20,7 @@ const Tool = () => {
     (state: RootState) => state.actionSlice.activeAction
   );
   return (
-    <div className="h-16 bg-[#202540] z-40 w-full border-gray-100/20 flex justify-between items-center px-10">
+    <div className="h-16 bg-[#202540] z-30 w-full border-gray-100/20 flex justify-between items-center px-10">
       <div className="flex gap-2">
         <MainMenu />
         <div className="h-10 w-[200px] rounded-md bg-indigo-400/20 flex">
