@@ -29,8 +29,6 @@ const Recording = () => {
     }
   };
 
-  console.log("status", status);
-  console.log("mediaBlobUrl", mediaBlobUrl);
   return (
     <div className="h-10 w-auto flex gap-2">
       <TooltipProvider>
