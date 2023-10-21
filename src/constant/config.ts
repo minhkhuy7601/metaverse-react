@@ -20,7 +20,7 @@ export const CONFIG_MAP: ConfigMapType = {
     cols: 30,
     map: LOBBY_MAP,
     image: lobby,
-    startPosition: { x: 12, y: 11 },
+    startPosition: { x: 13, y: 9 },
     actions: {
       "17,6": {
         id: "door_to_room1",
@@ -172,7 +172,7 @@ export const CONFIG_MAP: ConfigMapType = {
     cols: 30,
     map: ROOM_MAP,
     image: roomMap,
-    startPosition: { x: 12, y: 11 },
+    startPosition: { x: 16, y: 7 },
     actions: {
       "16,5": {
         id: "door_to_room",
@@ -203,7 +203,7 @@ export const CONFIG_MAP: ConfigMapType = {
     cols: 30,
     map: ROOM_MAP,
     image: roomMap,
-    startPosition: { x: 12, y: 11 },
+    startPosition: { x: 16, y: 7 },
     actions: {
       "16,5": {
         id: "door_to_room",
@@ -234,7 +234,7 @@ export const CONFIG_MAP: ConfigMapType = {
     cols: 30,
     map: ROOM_MAP,
     image: roomMap,
-    startPosition: { x: 12, y: 11 },
+    startPosition: { x: 16, y: 7 },
     actions: {
       "16,5": {
         id: "door_to_room",
@@ -265,7 +265,7 @@ export const CONFIG_MAP: ConfigMapType = {
     cols: 30,
     map: ROOM_MAP,
     image: roomMap,
-    startPosition: { x: 12, y: 11 },
+    startPosition: { x: 16, y: 7 },
     actions: {
       "16,5": {
         id: "door_to_room",
@@ -296,7 +296,7 @@ export const CONFIG_MAP: ConfigMapType = {
     cols: 30,
     map: ROOM_MAP,
     image: roomMap,
-    startPosition: { x: 12, y: 11 },
+    startPosition: { x: 16, y: 7 },
     actions: {
       "16,5": {
         id: "door_to_room",
@@ -327,7 +327,7 @@ export const CONFIG_MAP: ConfigMapType = {
     cols: 30,
     map: ROOM_MAP,
     image: roomMap,
-    startPosition: { x: 12, y: 11 },
+    startPosition: { x: 16, y: 7 },
     actions: {
       "16,5": {
         id: "door_to_room",
@@ -358,7 +358,7 @@ export const CONFIG_MAP: ConfigMapType = {
     cols: 30,
     map: ROOM_MAP,
     image: roomMap,
-    startPosition: { x: 12, y: 11 },
+    startPosition: { x: 16, y: 7 },
     actions: {
       "16,5": {
         id: "door_to_room",
