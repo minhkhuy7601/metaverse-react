@@ -13,8 +13,8 @@ const MainMenu = () => {
         <>
           <Popover.Button
             className={`
-            ${open ? "" : "text-opacity-90"}
-            group w-10 h-10 rounded-md bg-white p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}>
+        ${open ? "" : "text-opacity-90"}
+        group w-10 h-10 rounded-md bg-white p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}>
             <img src={logo} alt="logo" className="w-full h-full object-cover" />
           </Popover.Button>
           <Transition

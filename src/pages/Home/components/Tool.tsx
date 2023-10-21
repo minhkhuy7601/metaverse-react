@@ -12,6 +12,7 @@ import { IoChatbubblesSharp } from "react-icons/io5";
 import { MdModeEditOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import MainMenu from "./MainMenu";
+import Recording from "./Recording";
 
 const Tool = () => {
   const dispatch = useDispatch();
@@ -58,6 +59,7 @@ const Tool = () => {
             </button>
           </div>
         </div>
+        <Recording />
       </div>
 
       <div className="h-full flex items-center gap-3">
