@@ -18,9 +18,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     (state: RootState) => state.actionSlice.isLoadingGame
   );
 
-  if (isLoadingGame) return <ScreenLoading />;
   return (
     <>
+      {isLoadingGame && <ScreenLoading />}
       <EditNameModal />
       <EditAvatarModal />
       <QuestionModal />

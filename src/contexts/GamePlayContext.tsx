@@ -28,13 +28,17 @@ import {
 } from "firebase/database";
 import { ReactNode, createContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export const GamePlayContext = createContext<GamePlayContextProps | undefined>(
   undefined
 );
 
 export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
+  const [searchParams] = useSearchParams();
+  const roomIdFromParams = searchParams.get("roomId");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isLoadingGame = useSelector(
     (state: RootState) => state.actionSlice.isLoadingGame
   );
@@ -62,6 +66,36 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRoom]);
 
+  const respawnAction = () => {
+    const startRoom = CONFIG_MAP["school"];
+    dispatch(setLoading(true));
+    new Promise<void>((resolve) => {
+      setTimeout(() => {
+        handleSetPositionPlayerCurrent(
+          startRoom.startPosition.x,
+          startRoom.startPosition.y
+        );
+        if (playerIdRef.current) {
+          listPlayersRef.current[playerIdRef.current].roomId = startRoom.id;
+          set(playerRef.current, listPlayersRef.current[playerIdRef.current]);
+        }
+        navigate(`/play?roomId=${startRoom.id}`);
+        setCurrentRoom(startRoom);
+        setCurrentPlayer((curr) => ({
+          ...curr,
+          roomId: startRoom.id,
+          x: startRoom.startPosition.x,
+          y: startRoom.startPosition.y,
+        }));
+        resolve();
+      }, 200);
+    }).then(() => {
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 200);
+    });
+  };
+
   async function handleActionPlayer(type: string, value: any) {
     switch (type) {
       case "CHANGE_ROOM": {
@@ -79,6 +113,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
                 listPlayersRef.current[playerIdRef.current]
               );
             }
+            navigate(`/play?roomId=${value?.name}`);
             setCurrentRoom(CONFIG_MAP[value?.name]);
             setCurrentPlayer((curr) => ({
               ...curr,
@@ -321,12 +356,26 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
 
           if (player.id) {
             setCurrentPlayer(player);
-          } else {
-            throw "player id null";
+          }
+          if (roomIdFromParams) {
+            setCurrentPlayer({
+              ...player,
+              roomId: searchParams.get("roomId"),
+              x: CONFIG_MAP[roomIdFromParams].startPosition.x,
+              y: CONFIG_MAP[roomIdFromParams].startPosition.y,
+            });
           }
         } catch (error) {
           console.log(initPlayer);
           setCurrentPlayer(initPlayer);
+          if (roomIdFromParams) {
+            setCurrentPlayer({
+              ...initPlayer,
+              roomId: searchParams.get("roomId") as string,
+              x: CONFIG_MAP[roomIdFromParams].startPosition.x,
+              y: CONFIG_MAP[roomIdFromParams].startPosition.y,
+            });
+          }
         }
         onDisconnect(refPlayerFirebase).remove();
       } else {
@@ -377,6 +426,7 @@ export const GamePlayProvider = ({ children }: { children: ReactNode }) => {
     playerId: playerIdRef.current,
     messages,
     setCurrentPlayer,
+    respawnAction,
     playerRef,
     players,
     currentRoom,
