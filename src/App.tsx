@@ -4,6 +4,8 @@ import ScreenLoading from "./components/ScreenLoading";
 import { GamePlayProvider } from "./contexts/GamePlayContext";
 import GetStated from "./pages/GetStated";
 import Home from "./pages/Home";
+import Zoom from "./pages/Zoom";
+import ZoomVideoSdk from "./pages/ZoomVideoSdk";
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
         <Routes>
           <Route path="/" element={<GetStated />} />
           <Route path="/play" element={<Home />} />
+          <Route path="/zoom" element={<ZoomVideoSdk />} />
+          <Route path="/token" element={<Zoom />} />
         </Routes>
       </GamePlayProvider>
     </Suspense>
