@@ -10,6 +10,7 @@ import {
 import { Button, Dropdown, Tooltip } from "antd";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
+import { BiSolidMicrophone } from "react-icons/bi";
 import { MediaDevice } from "../video-types";
 import CallOutModal from "./call-out-modal";
 import { getAntdDropdownMenu, getAntdItem } from "./video-footer-utils";
@@ -165,8 +166,8 @@ const MicrophoneButton = (props: MicrophoneButtonProps) => {
             </DropdownButton>
           ) : (
             <Button
-              className="vc-button"
-              icon={<IconFont type="icon-headset" />}
+              className="vc-button text-white"
+              icon={<BiSolidMicrophone />}
               size="large"
               ghost
               shape="circle"

@@ -1,7 +1,4 @@
-import { IconFont } from "@/components/zoomSdk/icon-font";
-import { UpOutlined } from "@ant-design/icons";
 import { Button, Dropdown } from "antd";
-import classNames from "classnames";
 import { getAntdDropdownMenu, getAntdItem } from "./video-footer-utils";
 const { Button: DropdownButton } = Dropdown;
 interface LeaveButtonProps {
@@ -14,29 +11,30 @@ const LeaveButton = (props: LeaveButtonProps) => {
   const { onLeaveClick, onEndClick, isHost } = props;
 
   return isHost ? (
-    <DropdownButton
-      className="vc-dropdown-button"
-      size="large"
+    <Dropdown
+      className="!text-white"
       menu={getAntdDropdownMenu(
         [getAntdItem("End session", "end")],
         onEndClick
       )}
-      trigger={["click"]}
-      onClick={onLeaveClick}
-      icon={<UpOutlined />}
       placement="topRight">
-      <IconFont type="icon-leave" />
-    </DropdownButton>
+      <Button
+        size="large"
+        className="!bg-red-500 !font-bold !text-white"
+        onClick={onLeaveClick}>
+        End
+      </Button>
+    </Dropdown>
   ) : (
     <Button
-      className={classNames("vc-button")}
-      icon={<IconFont type="icon-leave" />}
+      className="!bg-red-500 !rounded-md !px-4 !font-bold"
       ghost={true}
       shape="circle"
       size="large"
       onClick={onLeaveClick}
-      title="Leave session"
-    />
+      title="Leave session">
+      End
+    </Button>
   );
 };
 

@@ -1,6 +1,5 @@
 /* eslint-disable */
 
-import { IconFont } from "@/components/zoomSdk/icon-font";
 import {
   CheckOutlined,
   LockOutlined,
@@ -10,6 +9,7 @@ import {
 import { SharePrivilege } from "@zoom/videosdk";
 import { Button, Dropdown, Tooltip } from "antd";
 import classNames from "classnames";
+import { IoShareOutline } from "react-icons/io5";
 import { getAntdDropdownMenu, getAntdItem } from "./video-footer-utils";
 
 const { Button: DropdownButton } = Dropdown;
@@ -63,12 +63,12 @@ const ScreenShareButton = (props: ScreenShareButtonProps) => {
           trigger={["click"]}
           icon={<UpOutlined />}
           placement="topRight">
-          <IconFont type="icon-share" />
+          <IoShareOutline />
         </DropdownButton>
       ) : (
         <Button
           className={classNames("screen-share-button", "vc-button")}
-          icon={<IconFont type="icon-share" />}
+          icon={<IoShareOutline />}
           ghost={true}
           shape="circle"
           size="large"

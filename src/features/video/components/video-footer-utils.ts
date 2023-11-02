@@ -27,7 +27,7 @@ export const getAntdDropdownMenu = (
   return {
     items,
     onClick,
-    theme: "dark",
-    className: clzName ?? "vc-dropdown-menu",
+    theme: "light",
+    className: clzName ?? "",
   };
 };

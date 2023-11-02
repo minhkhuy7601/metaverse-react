@@ -132,9 +132,9 @@ const CameraButton = (props: CameraButtonProps) => {
             className={classNames("vc-button", className)}
             icon={
               isStartedVideo ? (
-                <VideoCameraOutlined />
+                <VideoCameraOutlined style={{ fontSize: "25px" }} />
               ) : (
-                <VideoCameraAddOutlined />
+                <VideoCameraAddOutlined style={{ fontSize: "25px" }} />
               )
             }
             ghost={true}

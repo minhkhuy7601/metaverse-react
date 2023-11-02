@@ -1,6 +1,5 @@
 /* eslint-disable */
 
-import { IconFont } from "@/components/zoomSdk/icon-font";
 import ZoomMediaContext from "@/contexts/media-context";
 import ZoomContext from "@/contexts/zoom-context";
 import { isAndroidOrIOSBrowser } from "@/utils/platform";
@@ -19,6 +18,7 @@ import {
 import { message } from "antd";
 import classNames from "classnames";
 import { useCallback, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMount, useUnmount } from "../../../hooks";
 import {
   SELF_VIDEO_ID,
@@ -28,17 +28,10 @@ import { MediaDevice } from "../video-types";
 import AudioVideoStatisticModal from "./audio-video-statistic";
 import CameraButton from "./camera";
 import { LeaveButton } from "./leave";
-import { LiveStreamButton, LiveStreamModal } from "./live-stream";
-import { LiveTranscriptionButton } from "./live-transcription";
 import MicrophoneButton from "./microphone";
-import {
-  RecordButtonProps,
-  RecordingButton,
-  getRecordingButtons,
-} from "./recording";
+import { RecordButtonProps, getRecordingButtons } from "./recording";
 import IsoRecordingModal from "./recording-ask-modal";
 import { ScreenShareButton } from "./screen-share";
-import { TranscriptionSubtitle } from "./transcription-subtitle";
 import "./video-footer.scss";
 import { VideoMaskModel } from "./video-mask-modal";
 interface VideoFooterProps {
@@ -49,6 +42,7 @@ interface VideoFooterProps {
 
 const isAudioEnable = typeof AudioWorklet === "function";
 const VideoFooter = (props: VideoFooterProps) => {
+  const navigate = useNavigate();
   const { className, selfShareCanvas, sharing } = props;
   const [isStartedAudio, setIsStartedAudio] = useState(false);
   const [isStartedVideo, setIsStartedVideo] = useState(false);
@@ -289,10 +283,12 @@ const VideoFooter = (props: VideoFooterProps) => {
 
   const onLeaveClick = useCallback(async () => {
     await zmClient.leave();
+    navigate("/");
   }, [zmClient]);
 
   const onEndClick = useCallback(async () => {
     await zmClient.leave(true);
+    navigate("/");
   }, [zmClient]);
 
   const onPassivelyStopShare = useCallback(({ reason }: any) => {
@@ -332,32 +328,32 @@ const VideoFooter = (props: VideoFooterProps) => {
     setPhoneCallStatus(payload.code);
   }, []);
 
-  const onRecordingClick = async (key: string) => {
-    switch (key) {
-      case "Record": {
-        await recordingClient?.startCloudRecording();
-        break;
-      }
-      case "Resume": {
-        await recordingClient?.resumeCloudRecording();
-        break;
-      }
-      case "Stop": {
-        await recordingClient?.stopCloudRecording();
-        break;
-      }
-      case "Pause": {
-        await recordingClient?.pauseCloudRecording();
-        break;
-      }
-      case "Status": {
-        break;
-      }
-      default: {
-        await recordingClient?.startCloudRecording();
-      }
-    }
-  };
+  // const onRecordingClick = async (key: string) => {
+  //   switch (key) {
+  //     case "Record": {
+  //       await recordingClient?.startCloudRecording();
+  //       break;
+  //     }
+  //     case "Resume": {
+  //       await recordingClient?.resumeCloudRecording();
+  //       break;
+  //     }
+  //     case "Stop": {
+  //       await recordingClient?.stopCloudRecording();
+  //       break;
+  //     }
+  //     case "Pause": {
+  //       await recordingClient?.pauseCloudRecording();
+  //       break;
+  //     }
+  //     case "Status": {
+  //       break;
+  //     }
+  //     default: {
+  //       await recordingClient?.startCloudRecording();
+  //     }
+  //   }
+  // };
   const onVideoCaptureChange = useCallback((payload: any) => {
     if (payload.state === VideoCapturingState.Started) {
       setIsStartedVideo(true);
@@ -525,7 +521,11 @@ const VideoFooter = (props: VideoFooterProps) => {
     zmClient.isHost()
   );
   return (
-    <div className={classNames("video-footer", className)}>
+    <div
+      className={classNames(
+        "flex justify-center w-full px-20 items-center py-2",
+        className
+      )}>
       {isAudioEnable && (
         <MicrophoneButton
           isStartedAudio={isStartedAudio}
@@ -565,7 +565,7 @@ const VideoFooter = (props: VideoFooterProps) => {
       {sharing && (
         <ScreenShareButton
           sharePrivilege={sharePrivilege}
-          isHostOrManager={zmClient.isHost() || zmClient.isManager()}
+          isHostOrManager={zmClient.isHost()}
           onScreenShareClick={onScreenShareClick}
           onSharePrivilegeClick={async (privilege) => {
             await mediaStream?.setSharePrivilege(privilege);
@@ -573,7 +573,7 @@ const VideoFooter = (props: VideoFooterProps) => {
           }}
         />
       )}
-      {recordingButtons.map((button: RecordButtonProps) => {
+      {/* {recordingButtons.map((button: RecordButtonProps) => {
         return (
           <RecordingButton
             key={button.text}
@@ -583,8 +583,8 @@ const VideoFooter = (props: VideoFooterProps) => {
             {...button}
           />
         );
-      })}
-      {liveTranscriptionClient?.getLiveTranscriptionStatus()
+      })} */}
+      {/* {liveTranscriptionClient?.getLiveTranscriptionStatus()
         .isLiveTranscriptionEnabled && (
         <>
           <LiveTranscriptionButton
@@ -619,8 +619,8 @@ const VideoFooter = (props: VideoFooterProps) => {
             }}
           />
         </>
-      )}
-      {liveStreamStatus === LiveStreamStatus.InProgress && (
+      )} */}
+      {/* {liveStreamStatus === LiveStreamStatus.InProgress && (
         <IconFont
           type="icon-live"
           style={{
@@ -630,7 +630,7 @@ const VideoFooter = (props: VideoFooterProps) => {
             color: "#f00",
           }}
         />
-      )}
+      )} */}
       <LeaveButton
         onLeaveClick={onLeaveClick}
         isHost={zmClient.isHost()}

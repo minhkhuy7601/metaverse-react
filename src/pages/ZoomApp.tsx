@@ -106,7 +106,6 @@ const ZoomApp = (props: AppProps) => {
       customerJoinId,
     },
   } = props;
-  console.log("props", props);
   const [loading, setIsLoading] = useState(true);
   const [loadingText, setLoadingText] = useState("");
   const [isFailover, setIsFailover] = useState<boolean>(false);
@@ -130,6 +129,25 @@ const ZoomApp = (props: AppProps) => {
   );
   const galleryViewWithoutSAB =
     Number(enforceGalleryView) === 1 && !window.crossOriginIsolated;
+
+  useEffect(() => {
+    const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+      // Handle the event logic here
+      // You can call API methods or perform necessary actions before unloading the page
+      await zmClient.leave();
+      event.preventDefault();
+      // Optionally, return a message to display in the confirmation dialog
+      event.returnValue = "Are you sure you want to leave?";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Clean up the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   useEffect(() => {
     const init = async () => {
       await zmClient.init("en-US", `${window.location.origin}/lib`, {
