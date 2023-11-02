@@ -1,3 +1,4 @@
+/* eslint-disable */
 import ZoomMediaContext from "@/contexts/media-context";
 import { Menu, Modal } from "antd";
 import classNames from "classnames";
@@ -30,7 +31,7 @@ export const VideoMaskModel = (props: VideoMaskModelProps) => {
     const { x, y } = data;
     setClipPos({ x, y });
   }, 50).run;
-  const onBackgroundClick = useCallback(({ key }) => {
+  const onBackgroundClick = useCallback(({ key }: any) => {
     setBackground(key);
   }, []);
   const onClostVideoPreview = useCallback(() => {

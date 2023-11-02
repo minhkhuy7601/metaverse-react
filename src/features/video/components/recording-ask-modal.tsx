@@ -1,8 +1,6 @@
-import { Modal, Select, Input, Checkbox, Form } from 'antd';
-import classNames from 'classnames';
-import './recording-ask-modal.scss';
-import { RecordingStatus } from '@zoom/videosdk';
-import { useState } from 'react';
+import { Modal } from "antd";
+import { useState } from "react";
+import "./recording-ask-modal.scss";
 interface IsoRecordingModalProps {
   onClick: () => void;
   onCancel: () => void;
@@ -25,8 +23,7 @@ const IsoRecordingModal = (props: IsoRecordingModalProps) => {
         await onCancel();
         setVisible(false);
       }}
-      destroyOnClose
-    >
+      destroyOnClose>
       Do you want you allow Individual Cloud recording mode?
     </Modal>
   );

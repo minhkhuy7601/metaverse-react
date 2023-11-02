@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { MediaStream } from "@/lib/zoomVideoSdk";
 import React from "react";
 interface MediaContext {

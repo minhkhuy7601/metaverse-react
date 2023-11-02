@@ -1,3 +1,4 @@
+/* eslint-disable */
 import ZoomMediaContext from "@/contexts/media-context";
 import ZoomContext from "@/contexts/zoom-context";
 import classnames from "classnames";
@@ -61,11 +62,14 @@ const ShareView = forwardRef((props: ShareViewProps, ref: any) => {
     shareViewRef.current
   );
 
-  const onContainerResize = useCallback(({ width, height }) => {
-    if (shareViewContainerRef.current) {
-      debounceRef.current({ width, height });
-    }
-  }, []);
+  const onContainerResize = useCallback(
+    ({ width, height }: { width: any; height: any }) => {
+      if (shareViewContainerRef.current) {
+        debounceRef.current({ width, height });
+      }
+    },
+    []
+  );
   useMount(() => {
     if (shareViewContainerRef.current) {
       const { width, height } =
@@ -75,7 +79,7 @@ const ShareView = forwardRef((props: ShareViewProps, ref: any) => {
   });
   useSizeCallback(shareViewContainerRef.current, onContainerResize);
   const onShareViewDrag = useCallback(
-    (_event, { x, y }) => {
+    (_event: any, { x, y }: { x: any; y: any }) => {
       const { width, height } = sharedContentDimension;
       const { width: vWidth, height: vHeight } = shareViewSize;
       setOriginalViewPosition((payload) => {

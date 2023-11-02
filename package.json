@@ -24,6 +24,7 @@
     "firebase": "^10.4.0",
     "immer": "^10.0.3",
     "jsrsasign": "^10.8.6",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.284.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@types/jsrsasign": "^10.5.11",
+    "@types/lodash": "^4.14.200",
     "@types/node": "^20.8.2",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

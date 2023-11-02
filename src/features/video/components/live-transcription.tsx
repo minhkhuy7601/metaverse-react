@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { IconFont } from "@/components/zoomSdk/icon-font";
 import { UpOutlined } from "@ant-design/icons";
 import { Button, Dropdown } from "antd";
@@ -12,10 +13,10 @@ interface LiveTranscriptionButtonProps {
   className?: string;
 }
 
-interface LiveTranscriptionLockButtonProps {
-  isLockedLiveTranscription: boolean;
-  onLiveTranscriptionLockClick: () => void;
-}
+// interface LiveTranscriptionLockButtonProps {
+//   isLockedLiveTranscription: boolean;
+//   onLiveTranscriptionLockClick: () => void;
+// }
 
 const LiveTranscriptionButton = (props: LiveTranscriptionButtonProps) => {
   const {
@@ -24,7 +25,6 @@ const LiveTranscriptionButton = (props: LiveTranscriptionButtonProps) => {
     isDisableCaptions,
     isHost,
     onLiveTranscriptionClick,
-    className,
   } = props;
   const onMenuItemClick = (payload: { key: any }) => {
     if (payload.key === "disable") {
@@ -44,7 +44,6 @@ const LiveTranscriptionButton = (props: LiveTranscriptionButtonProps) => {
         <Dropdown.Button
           icon={<UpOutlined />}
           size="large"
-          type="ghost"
           menu={getAntdDropdownMenu(menuItems, onMenuItemClick)}
           onClick={onLiveTranscriptionClick}
           placement="topRight"

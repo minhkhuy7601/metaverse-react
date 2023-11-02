@@ -1,3 +1,4 @@
+/* eslint-disable */
 import MediaContext from "@/contexts/media-context";
 import { CheckOutlined, MoreOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Slider } from "antd";
@@ -41,7 +42,7 @@ const AvatarMore = (props: AvatarMoreProps) => {
     }
   }
   const onSliderChange = useCallback(
-    (value) => {
+    (value: any) => {
       mediaStream?.adjustUserAudioVolumeLocally(userId, value);
       dispatch({
         type: "update-local-volume",
@@ -50,7 +51,7 @@ const AvatarMore = (props: AvatarMoreProps) => {
     },
     [userId, mediaStream, dispatch]
   );
-  const onDropDownVisibleChange = useCallback((visible) => {
+  const onDropDownVisibleChange = useCallback((visible: any) => {
     setIsDropdownVisbile(visible);
   }, []);
   const onMenuItemClick = useCallback(

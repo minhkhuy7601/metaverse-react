@@ -1,17 +1,35 @@
-import { Modal, Select, Input, Checkbox, Form } from 'antd';
-import classNames from 'classnames';
-import './call-out-modal.scss';
+/* eslint-disable */
+
+import { Checkbox, Form, Input, Modal, Select } from "antd";
+import classNames from "classnames";
+import "./call-out-modal.scss";
 interface CallOutModalProps {
   visible: boolean;
   phoneCountryList?: any[];
   phoneCallStatus?: { text: string; type: string };
   setVisible: (visible: boolean) => void;
-  onPhoneCallClick?: (code: string, phoneNumber: string, name: string, option: any) => void;
-  onPhoneCallCancel?: (code: string, phoneNumber: string, option: any) => Promise<any>;
+  onPhoneCallClick?: (
+    code: string,
+    phoneNumber: string,
+    name: string,
+    option: any
+  ) => void;
+  onPhoneCallCancel?: (
+    code: string,
+    phoneNumber: string,
+    option: any
+  ) => Promise<any>;
 }
 
 const CallOutModal = (props: CallOutModalProps) => {
-  const { visible, phoneCountryList, phoneCallStatus, onPhoneCallClick, onPhoneCallCancel, setVisible } = props;
+  const {
+    visible,
+    phoneCountryList,
+    phoneCallStatus,
+    onPhoneCallClick,
+    onPhoneCallCancel,
+    setVisible,
+  } = props;
   const [form] = Form.useForm();
   return (
     <Modal
@@ -27,16 +45,16 @@ const CallOutModal = (props: CallOutModalProps) => {
             callme,
             name,
             greeting,
-            press
+            press,
           } = data;
-          const [, code] = countryCode.split('&&');
+          const [, code] = countryCode.split("&&");
           if (callme) {
-            onPhoneCallClick?.(code, phoneNumber, '', { callMe: true });
+            onPhoneCallClick?.(code, phoneNumber, "", { callMe: true });
           } else {
             onPhoneCallClick?.(code, phoneNumber, name, {
               callMe: false,
               greeting: greeting,
-              pressingOne: press
+              pressingOne: press,
             });
           }
         } catch (e) {
@@ -46,35 +64,40 @@ const CallOutModal = (props: CallOutModalProps) => {
       onCancel={async () => {
         const {
           phone: { countryCode, phoneNumber },
-          callme
+          callme,
         } = form.getFieldsValue();
         if (countryCode) {
-          const [, code] = countryCode.split('&&');
-          await onPhoneCallCancel?.(code || '', phoneNumber, { callMe: callme });
+          const [, code] = countryCode.split("&&");
+          await onPhoneCallCancel?.(code || "", phoneNumber, {
+            callMe: callme,
+          });
         }
 
         setVisible(false);
       }}
-      destroyOnClose
-    >
+      destroyOnClose>
       <Form form={form} name="call-out-form">
         <Form.Item label="Phone Number" required>
           <Input.Group compact className="phone-number">
             <Form.Item
-              name={['phone', 'countryCode']}
+              name={["phone", "countryCode"]}
               noStyle
-              rules={[{ required: true, message: 'Country code is required' }]}
-            >
-              <Select placeholder="select a country" className="country-code" showSearch optionFilterProp="children">
+              rules={[{ required: true, message: "Country code is required" }]}>
+              <Select
+                placeholder="select a country"
+                className="country-code"
+                showSearch
+                optionFilterProp="children">
                 {phoneCountryList?.map((item) => (
                   <Select.Option
                     value={`${item.id}&&${item.code}`}
-                    key={item.id}
-                  >{`${item.name} (${item.code})`}</Select.Option>
+                    key={
+                      item.id
+                    }>{`${item.name} (${item.code})`}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item name={['phone', 'phoneNumber']} noStyle>
+            <Form.Item name={["phone", "phoneNumber"]} noStyle>
               <Input className="number" placeholder="phone number" />
             </Form.Item>
           </Input.Group>
@@ -82,32 +105,43 @@ const CallOutModal = (props: CallOutModalProps) => {
         <Form.Item name="callme" valuePropName="checked">
           <Checkbox>Call me</Checkbox>
         </Form.Item>
-        <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.callme !== currentValues.callme}>
+        <Form.Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.callme !== currentValues.callme
+          }>
           {({ getFieldValue }) =>
-            getFieldValue('callme') ? null : (
+            getFieldValue("callme") ? null : (
               <Form.Item
                 name="name"
                 label="Name"
                 required
-                rules={[{ required: true, message: 'Please input the name' }]}
-              >
+                rules={[{ required: true, message: "Please input the name" }]}>
                 <Input placeholder="name" />
               </Form.Item>
             )
           }
         </Form.Item>
-        <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.callme !== currentValues.callme}>
+        <Form.Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.callme !== currentValues.callme
+          }>
           {({ getFieldValue }) =>
-            getFieldValue('callme') ? null : (
+            getFieldValue("callme") ? null : (
               <Form.Item name="greeting" valuePropName="checked">
                 <Checkbox>Require greeting before being connected</Checkbox>
               </Form.Item>
             )
           }
         </Form.Item>
-        <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.callme !== currentValues.callme}>
+        <Form.Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.callme !== currentValues.callme
+          }>
           {({ getFieldValue }) =>
-            getFieldValue('callme') ? null : (
+            getFieldValue("callme") ? null : (
               <Form.Item name="press" valuePropName="checked">
                 <Checkbox>Require pressing 1 before being connected</Checkbox>
               </Form.Item>
@@ -118,7 +152,9 @@ const CallOutModal = (props: CallOutModalProps) => {
       {phoneCallStatus && (
         <div className="phone-call-status">
           Phone call status:
-          <span className={classNames('status-text', phoneCallStatus.type)}>{phoneCallStatus.text}</span>
+          <span className={classNames("status-text", phoneCallStatus.type)}>
+            {phoneCallStatus.text}
+          </span>
         </div>
       )}
     </Modal>

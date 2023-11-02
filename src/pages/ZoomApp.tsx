@@ -4,6 +4,7 @@ import zoomContext from "@/contexts/zoom-context";
 import Video from "@/features/video/video";
 import VideoNonSAB from "@/features/video/video-non-sab";
 import VideoSingle from "@/features/video/video-single";
+import { MediaStream } from "@/lib/zoomVideoSdk";
 import ZoomVideo, { ConnectionState, ReconnectReason } from "@zoom/videosdk";
 import { produce } from "immer";
 import {
@@ -82,9 +83,12 @@ const mediaReducer = produce((draft, action) => {
 declare global {
   interface Window {
     webEndpoint: string | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     zmClient: any | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mediaStream: any | undefined;
     crossOriginIsolated: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ltClient: any | undefined;
   }
 }
@@ -100,7 +104,6 @@ const ZoomApp = (props: AppProps) => {
       webEndpoint: webEndpointArg,
       enforceGalleryView,
       customerJoinId,
-      lang,
     },
   } = props;
   console.log("props", props);
@@ -108,11 +111,13 @@ const ZoomApp = (props: AppProps) => {
   const [loadingText, setLoadingText] = useState("");
   const [isFailover, setIsFailover] = useState<boolean>(false);
   const [status, setStatus] = useState<string>("closed");
+  console.log("status", status);
   const [mediaState, dispatch] = useReducer(mediaReducer, mediaShape);
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const [isSupportGalleryView, setIsSupportGalleryView] =
     useState<boolean>(true);
   const zmClient = useContext(zoomContext);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let webEndpoint: any;
   if (webEndpointArg) {
     webEndpoint = webEndpointArg;
@@ -143,7 +148,7 @@ const ZoomApp = (props: AppProps) => {
         setMediaStream(stream);
         setIsSupportGalleryView(stream.isSupportMultipleVideos());
         setIsLoading(false);
-      } catch (e: any) {
+      } catch (e) {
         console.log("e", e);
         setIsLoading(false);
         // message.error(e.reason);
@@ -165,7 +170,8 @@ const ZoomApp = (props: AppProps) => {
     customerJoinId,
   ]);
   const onConnectionChange = useCallback(
-    (payload) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (payload: any) => {
       if (payload.state === ConnectionState.Reconnecting) {
         setIsLoading(true);
         setIsFailover(true);
@@ -203,29 +209,32 @@ const ZoomApp = (props: AppProps) => {
     },
     [isFailover, zmClient]
   );
-  const onMediaSDKChange = useCallback((payload) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onMediaSDKChange = useCallback((payload: any) => {
     const { action, type, result } = payload;
     dispatch({ type: `${type}-${action}`, payload: result === "success" });
   }, []);
 
-  const onDialoutChange = useCallback((payload) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onDialoutChange = useCallback((payload: any) => {
     console.log("onDialoutChange", payload);
   }, []);
 
-  const onAudioMerged = useCallback((payload) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onAudioMerged = useCallback((payload: any) => {
     console.log("onAudioMerged", payload);
   }, []);
 
-  const onLeaveOrJoinSession = useCallback(async () => {
-    if (status === "closed") {
-      setIsLoading(true);
-      await zmClient.join(topic, signature, name, password);
-      setIsLoading(false);
-    } else if (status === "connected") {
-      await zmClient.leave();
-      //   message.warn("You have left the session.");
-    }
-  }, [zmClient, status, topic, signature, name, password]);
+  // const onLeaveOrJoinSession = useCallback(async () => {
+  //   if (status === "closed") {
+  //     setIsLoading(true);
+  //     await zmClient.join(topic, signature, name, password);
+  //     setIsLoading(false);
+  //   } else if (status === "connected") {
+  //     await zmClient.leave();
+  //     //   message.warn("You have left the session.");
+  //   }
+  // }, [zmClient, status, topic, signature, name, password]);
   useEffect(() => {
     zmClient.on("connection-change", onConnectionChange);
     zmClient.on("media-sdk-change", onMediaSDKChange);

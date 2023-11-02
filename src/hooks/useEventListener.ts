@@ -1,5 +1,5 @@
-import { useRef, useEffect } from 'react';
-import { MutableRefObject } from 'react';
+/* eslint-disable */
+import { MutableRefObject, useEffect, useRef } from "react";
 export function useEventListener(
   target:
     | MutableRefObject<HTMLElement | null | undefined>
@@ -7,8 +7,8 @@ export function useEventListener(
     | null
     | undefined,
   eventName: string,
-  handler: Function,
-  options = { capture: false, passive: false },
+  handler: any,
+  options = { capture: false, passive: false }
 ) {
   const handlerRef = useRef<Function>();
   handlerRef.current = handler;
@@ -16,7 +16,7 @@ export function useEventListener(
     let targetElement: null | Window | HTMLElement = null;
     if (!target) {
       targetElement = window;
-    } else if (Object.hasOwnProperty.call(target, 'current')) {
+    } else if (Object.hasOwnProperty.call(target, "current")) {
       targetElement = (target as MutableRefObject<HTMLElement>).current;
     } else {
       targetElement = target as HTMLElement;

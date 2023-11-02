@@ -83,7 +83,6 @@ const RecordingButton = (props: RecordButtonProps) => {
       <Button
         className={classNames("vc-button")}
         icon={<IconFont type={isHover ? hoverIcon : icon} />}
-        // eslint-disable-next-line react/jsx-boolean-value
         ghost={true}
         shape="circle"
         size="large"

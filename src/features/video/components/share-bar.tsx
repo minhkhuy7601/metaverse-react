@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { IconFont } from "@/components/zoomSdk/icon-font";
 import ZoomMediaContext from "@/contexts/media-context";
 import ZoomContext from "@/contexts/zoom-context";
@@ -185,7 +186,6 @@ const ShareBar = forwardRef((props: ShareBarProps, ref: any) => {
                 "share-dropdown-menu"
               )}
               trigger={["click"]}
-              type="ghost"
               icon={<SmallDashOutlined />}
               placement="bottomRight"
             />

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { IconFont } from "@/components/zoomSdk/icon-font";
 import {
   CheckOutlined,
@@ -51,7 +53,6 @@ const ScreenShareButton = (props: ScreenShareButtonProps) => {
     onSharePrivilegeClick?.(Number(payload.key));
   };
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {isHostOrManager ? (
         <DropdownButton
@@ -60,7 +61,6 @@ const ScreenShareButton = (props: ScreenShareButtonProps) => {
           menu={getAntdDropdownMenu(menu, onMenuItemClick)}
           onClick={onScreenShareClick}
           trigger={["click"]}
-          type="ghost"
           icon={<UpOutlined />}
           placement="topRight">
           <IconFont type="icon-share" />
@@ -89,7 +89,6 @@ const ScreenShareLockButton = (props: ScreenShareLockButtonProps) => {
       <Button
         className="screen-share-button"
         icon={isLockedScreenShare ? <LockOutlined /> : <UnlockOutlined />}
-        // eslint-disable-next-line react/jsx-boolean-value
         ghost={true}
         shape="circle"
         size="large"

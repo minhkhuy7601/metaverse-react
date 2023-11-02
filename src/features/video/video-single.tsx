@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import ZoomMediaContext from "@/contexts/media-context";
 import ZoomContext from "@/contexts/zoom-context";
 import { usePrevious } from "@/hooks";
@@ -48,7 +50,7 @@ const VideoContainer = () => {
   useParticipantsChange(zmClient, (payload) => {
     setParticipants(payload);
   });
-  const onActiveVideoChange = useCallback((payload) => {
+  const onActiveVideoChange = useCallback((payload: any) => {
     const { userId } = payload;
     setActiveVideo(userId);
   }, []);

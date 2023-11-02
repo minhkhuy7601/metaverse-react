@@ -26,7 +26,7 @@ interface RemoteControlIndicationProps {
 const RemoteCameraControlIndication = (props: RemoteControlIndicationProps) => {
   const { stopCameraControl } = props;
   const menu = [getAntdItem("Stop camera control", "stop")];
-  const onMenuItemClick = (payload: { key: any }) => {
+  const onMenuItemClick = () => {
     stopCameraControl();
   };
   return (
@@ -46,11 +46,11 @@ const RemoteCameraControlIndication = (props: RemoteControlIndicationProps) => {
   );
 };
 
-interface RemoteCameraControlPanelProps {
-  className?: string;
-}
+// interface RemoteCameraControlPanelProps {
+//   className?: string;
+// }
 type controlFuc = (range?: number) => void;
-const RemoteCameraControlPanel = (props: RemoteCameraControlPanelProps) => {
+const RemoteCameraControlPanel = () => {
   const { mediaStream } = useContext(ZoomMediaContext);
   const zmClient = useContext(ZoomContext);
   const {

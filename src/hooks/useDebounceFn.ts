@@ -1,13 +1,17 @@
-import { useRef, useMemo } from 'react';
-import _ from 'lodash';
+import _ from "lodash";
+import { useMemo, useRef } from "react";
 
-export function useDebounceFn(fn: Function, wait: number) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useDebounceFn(fn: any, wait: number) {
   const fnRef = useRef(fn);
   fnRef.current = fn;
-  const debounced = useMemo(() => _.debounce((...args) => fnRef.current(...args), wait), [wait]);
+  const debounced = useMemo(
+    () => _.debounce((...args) => fnRef.current(...args), wait),
+    [wait]
+  );
   return {
     run: debounced,
     cancel: debounced.cancel,
-    flush: debounced.flush
+    flush: debounced.flush,
   };
 }

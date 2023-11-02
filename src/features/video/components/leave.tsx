@@ -1,10 +1,9 @@
 import { IconFont } from "@/components/zoomSdk/icon-font";
 import { UpOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Menu } from "antd";
+import { Button, Dropdown } from "antd";
 import classNames from "classnames";
 import { getAntdDropdownMenu, getAntdItem } from "./video-footer-utils";
 const { Button: DropdownButton } = Dropdown;
-const { Item: MenuItem } = Menu;
 interface LeaveButtonProps {
   onLeaveClick: () => void;
   onEndClick: () => void;
@@ -23,7 +22,6 @@ const LeaveButton = (props: LeaveButtonProps) => {
         onEndClick
       )}
       trigger={["click"]}
-      type="ghost"
       onClick={onLeaveClick}
       icon={<UpOutlined />}
       placement="topRight">
@@ -33,7 +31,6 @@ const LeaveButton = (props: LeaveButtonProps) => {
     <Button
       className={classNames("vc-button")}
       icon={<IconFont type="icon-leave" />}
-      // eslint-disable-next-line react/jsx-boolean-value
       ghost={true}
       shape="circle"
       size="large"

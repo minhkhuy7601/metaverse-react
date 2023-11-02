@@ -1,4 +1,5 @@
 /* eslint-disable no-nested-ternary */
+/* eslint-disable */
 import { IconFont } from "@/components/zoomSdk/icon-font";
 import {
   AudioMutedOutlined,
@@ -131,7 +132,6 @@ const MicrophoneButton = (props: MicrophoneButtonProps) => {
           menu={getAntdDropdownMenu(menuItems, onMenuItemClick)}
           onClick={onMicrophoneClick}
           trigger={["click"]}
-          type="ghost"
           icon={<UpOutlined />}
           placement="topRight"
           disabled={disabled}>
@@ -159,7 +159,6 @@ const MicrophoneButton = (props: MicrophoneButtonProps) => {
               )}
               onClick={onMicrophoneClick}
               trigger={["click"]}
-              type="ghost"
               icon={<UpOutlined />}
               placement="topRight">
               <IconFont type="icon-headset" />

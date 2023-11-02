@@ -1,7 +1,7 @@
-import { Button, Menu } from 'antd';
+/* eslint-disable */
 // eslint-disable-next-line no-duplicate-imports
-import type { MenuProps } from 'antd';
-export type MenuItem = Required<MenuProps>['items'][number];
+import type { MenuProps } from "antd";
+export type MenuItem = Required<MenuProps>["items"][number];
 export const getAntdItem = (
   label: React.ReactNode,
   key: React.Key,
@@ -15,7 +15,7 @@ export const getAntdItem = (
     icon,
     children,
     label,
-    type
+    type,
   } as MenuItem;
 };
 
@@ -27,7 +27,7 @@ export const getAntdDropdownMenu = (
   return {
     items,
     onClick,
-    theme: 'dark',
-    className: clzName ?? 'vc-dropdown-menu'
+    theme: "dark",
+    className: clzName ?? "vc-dropdown-menu",
   };
 };

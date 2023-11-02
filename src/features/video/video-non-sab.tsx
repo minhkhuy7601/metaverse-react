@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import ZoomMediaContext from "@/contexts/media-context";
 import ZoomContext from "@/contexts/zoom-context";
 import classnames from "classnames";

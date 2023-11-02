@@ -17,7 +17,7 @@ interface AvatarProps {
 const networkQualityIcons = ["bad", "bad", "normal", "good", "good", "good"];
 const Avatar = (props: AvatarProps) => {
   const { participant, style, isActive, className, networkQuality } = props;
-  const { displayName, audio, muted, bVideoOn, userId } = participant;
+  const { displayName, audio, muted, bVideoOn } = participant;
   const avatarRef = useRef(null);
   const isHover = useHover(avatarRef);
 

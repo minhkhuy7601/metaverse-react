@@ -158,8 +158,7 @@ const ShareIndicationBar = (props: ShareIndicationBarProps) => {
           placement="bottomRight">
           <Button
             size="small"
-            className={classNames("share-bar-btn", "share-bar-more")}
-            type="ghost">
+            className={classNames("share-bar-btn", "share-bar-more")}>
             View Options
             <DownOutlined />
           </Button>

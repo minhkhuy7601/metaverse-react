@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   default as ZoomContext,
   default as ZoomMediaContext,
@@ -31,13 +32,13 @@ const VideoContainer = () => {
   }>(null);
   const [isRecieveSharing, setIsRecieveSharing] = useState(false);
   const canvasDimension = useCanvasDimension(mediaStream, videoRef);
-  const activeVideo = useActiveVideo(zmClient);
+  const activeVideo = useActiveVideo(zmClient as any);
   const { page, pageSize, totalPage, totalSize, setPage } = usePagination(
-    zmClient,
+    zmClient as any,
     canvasDimension
   );
   const { visibleParticipants, layout: videoLayout } = useGalleryLayout(
-    zmClient,
+    zmClient as any,
     mediaStream,
     isVideoDecodeReady,
     videoRef,
@@ -49,8 +50,11 @@ const VideoContainer = () => {
       totalSize,
     }
   );
-  const avatarActionState = useAvatarAction(zmClient, visibleParticipants);
-  const networkQuality = useNetworkQuality(zmClient);
+  const avatarActionState = useAvatarAction(
+    zmClient as any,
+    visibleParticipants
+  );
+  const networkQuality = useNetworkQuality(zmClient as any);
   return (
     <div className="viewport">
       <ShareView

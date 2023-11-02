@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import ZoomMediaContext from "@/contexts/media-context";
 import {
   CheckOutlined,
@@ -120,7 +122,6 @@ const CameraButton = (props: CameraButtonProps) => {
           menu={getAntdDropdownMenu(menuItems, onMenuItemClick)}
           onClick={onCameraClick}
           trigger={["click"]}
-          type="ghost"
           icon={<UpOutlined />}
           placement="topRight">
           <VideoCameraOutlined />

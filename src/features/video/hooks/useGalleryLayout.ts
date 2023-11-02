@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState, MutableRefObject } from 'react';
-import { getVideoLayout } from '../video-layout-helper';
-import { useRenderVideo } from './useRenderVideo';
-import { Dimension, Pagination, CellLayout } from '../video-types';
-import { ZoomClient, MediaStream, Participant } from '../../../index-types';
-import { useParticipantsChange } from './useParticipantsChange';
+import { MediaStream, ParticipantType, ZoomClient } from "@/lib/zoomVideoSdk";
+import { MutableRefObject, useCallback, useEffect, useState } from "react";
+import { getVideoLayout } from "../video-layout-helper";
+import { CellLayout, Dimension, Pagination } from "../video-types";
+import { useParticipantsChange } from "./useParticipantsChange";
+import { useRenderVideo } from "./useRenderVideo";
 /**
  * Default order of video:
  *  1. video's participants first
@@ -17,7 +17,9 @@ export function useGalleryLayout(
   dimension: Dimension,
   pagination: Pagination
 ) {
-  const [visibleParticipants, setVisibleParticipants] = useState<Participant[]>([]);
+  const [visibleParticipants, setVisibleParticipants] = useState<
+    ParticipantType[]
+  >([]);
   const [layout, setLayout] = useState<CellLayout[]>([]);
   const [subscribedVideos, setSubscribedVideos] = useState<number[]>([]);
   const { page, pageSize, totalPage, totalSize } = pagination;
@@ -31,21 +33,27 @@ export function useGalleryLayout(
   }, [dimension, size]);
 
   const onParticipantsChange = useCallback(
-    (participants: Participant[]) => {
+    (participants: ParticipantType[]) => {
       const currentUser = zmClient.getCurrentUserInfo();
       if (currentUser && participants.length > 0) {
-        let pageParticipants: Participant[] = [];
+        let pageParticipants: ParticipantType[] = [];
         if (participants.length === 1) {
           pageParticipants = participants;
         } else {
           pageParticipants = participants
             .filter((user) => user.userId !== currentUser.userId)
-            .sort((user1, user2) => Number(user2.bVideoOn) - Number(user1.bVideoOn));
+            .sort(
+              (user1, user2) => Number(user2.bVideoOn) - Number(user1.bVideoOn)
+            );
           pageParticipants.splice(1, 0, currentUser);
-          pageParticipants = pageParticipants.filter((_user, index) => Math.floor(index / pageSize) === page);
+          pageParticipants = pageParticipants.filter(
+            (_user, index) => Math.floor(index / pageSize) === page
+          );
         }
         setVisibleParticipants(pageParticipants);
-        const videoParticipants = pageParticipants.filter((user) => user.bVideoOn).map((user) => user.userId);
+        const videoParticipants = pageParticipants
+          .filter((user) => user.bVideoOn)
+          .map((user) => user.userId);
         setSubscribedVideos(videoParticipants);
       }
     },
@@ -64,6 +72,6 @@ export function useGalleryLayout(
   );
   return {
     visibleParticipants,
-    layout
+    layout,
   };
 }

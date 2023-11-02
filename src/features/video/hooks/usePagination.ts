@@ -1,10 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
-import { maxViewportVideoCounts } from '../video-layout-helper';
-import { useMount } from '../../../hooks';
-import { Dimension } from '../video-types';
-import { ZoomClient } from '../../../index-types';
+import { ZoomClient } from "@/lib/zoomVideoSdk";
+import { useCallback, useEffect, useState } from "react";
+import { useMount } from "../../../hooks";
+import { maxViewportVideoCounts } from "../video-layout-helper";
+import { Dimension } from "../video-types";
 const MAX_NUMBER_PER_PAGE = 9;
-// eslint-disable-next-line import/prefer-default-export
 export function usePagination(zmClient: ZoomClient, dimension: Dimension) {
   const [page, setPage] = useState(0);
   const [totalSize, setTotalSize] = useState(0);
@@ -12,7 +11,7 @@ export function usePagination(zmClient: ZoomClient, dimension: Dimension) {
   useEffect(() => {
     const size = Math.min(
       MAX_NUMBER_PER_PAGE,
-      maxViewportVideoCounts(dimension.width, dimension.height),
+      maxViewportVideoCounts(dimension.width, dimension.height)
     );
     setPageSize(size);
   }, [dimension]);
@@ -20,13 +19,13 @@ export function usePagination(zmClient: ZoomClient, dimension: Dimension) {
     setTotalSize(zmClient.getAllUser().length);
   }, [zmClient]);
   useEffect(() => {
-    zmClient.on('user-added', onParticipantsChange);
-    zmClient.on('user-removed', onParticipantsChange);
-    zmClient.on('user-updated', onParticipantsChange);
+    zmClient.on("user-added", onParticipantsChange);
+    zmClient.on("user-removed", onParticipantsChange);
+    zmClient.on("user-updated", onParticipantsChange);
     return () => {
-      zmClient.off('user-added', onParticipantsChange);
-      zmClient.off('user-removed', onParticipantsChange);
-      zmClient.off('user-updated', onParticipantsChange);
+      zmClient.off("user-added", onParticipantsChange);
+      zmClient.off("user-removed", onParticipantsChange);
+      zmClient.off("user-updated", onParticipantsChange);
     };
   }, [zmClient, onParticipantsChange]);
   useMount(() => {

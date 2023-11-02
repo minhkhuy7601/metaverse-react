@@ -1,6 +1,6 @@
+import { ParticipantType, ZoomClient } from "@/lib/zoomVideoSdk";
 import { produce } from "immer";
 import { useEffect, useMemo, useReducer } from "react";
-import { Participant, ZoomClient } from "../../../index-types";
 import { AvatarContext } from "../context/avatar-context";
 
 const avatarActionReducer = produce((draft, action) => {
@@ -79,7 +79,7 @@ const avatarActionReducer = produce((draft, action) => {
 
 export const useAvatarAction = (
   zmClient: ZoomClient,
-  participants: Array<Participant>
+  participants: Array<ParticipantType>
 ) => {
   const [avatarActionState, dispatch] = useReducer(avatarActionReducer, {});
   useEffect(() => {

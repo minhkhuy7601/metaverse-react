@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { KJUR } from "jsrsasign";
 
 export function simulateFetching(seconds: number) {
@@ -79,6 +80,7 @@ export function generateVideoToken(
   return signature;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isShallowEqual(objA: any, objB: any) {
   if (objA === objB) {
     return true;

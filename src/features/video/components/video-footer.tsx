@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { IconFont } from "@/components/zoomSdk/icon-font";
 import ZoomMediaContext from "@/contexts/media-context";
 import ZoomContext from "@/contexts/zoom-context";
@@ -233,7 +235,7 @@ const VideoFooter = (props: VideoFooterProps) => {
     }
     return Promise.resolve();
   };
-  const onHostAudioMuted = useCallback((payload) => {
+  const onHostAudioMuted = useCallback((payload: any) => {
     const { action, source, type } = payload;
     if (action === AudioChangeAction.Join) {
       setIsStartedAudio(true);
@@ -293,7 +295,7 @@ const VideoFooter = (props: VideoFooterProps) => {
     await zmClient.leave(true);
   }, [zmClient]);
 
-  const onPassivelyStopShare = useCallback(({ reason }) => {
+  const onPassivelyStopShare = useCallback(({ reason }: any) => {
     console.log("passively stop reason:", reason);
   }, []);
   const onDeviceChange = useCallback(() => {
@@ -326,7 +328,7 @@ const VideoFooter = (props: VideoFooterProps) => {
     [zmClient]
   );
 
-  const onDialOutChange = useCallback((payload) => {
+  const onDialOutChange = useCallback((payload: any) => {
     setPhoneCallStatus(payload.code);
   }, []);
 
@@ -356,7 +358,7 @@ const VideoFooter = (props: VideoFooterProps) => {
       }
     }
   };
-  const onVideoCaptureChange = useCallback((payload) => {
+  const onVideoCaptureChange = useCallback((payload: any) => {
     if (payload.state === VideoCapturingState.Started) {
       setIsStartedVideo(true);
     } else {
@@ -364,7 +366,7 @@ const VideoFooter = (props: VideoFooterProps) => {
     }
   }, []);
   const onShareAudioChange = useCallback(
-    (payload) => {
+    (payload: any) => {
       const { state } = payload;
       if (state === "on") {
         if (!mediaStream?.isSupportMicrophoneAndShareAudioSimultaneously()) {
@@ -376,19 +378,19 @@ const VideoFooter = (props: VideoFooterProps) => {
     },
     [mediaStream]
   );
-  const onHostAskToUnmute = useCallback((payload) => {
+  const onHostAskToUnmute = useCallback((payload: any) => {
     const { reason } = payload;
     console.log(`Host ask to unmute the audio.`, reason);
   }, []);
 
-  const onCaptionStatusChange = useCallback((payload) => {
+  const onCaptionStatusChange = useCallback((payload: any) => {
     const { autoCaption } = payload;
     if (autoCaption) {
       message.info("Auto live transcription enabled!");
     }
   }, []);
 
-  const onCaptionMessage = useCallback((payload) => {
+  const onCaptionMessage = useCallback((payload: any) => {
     const { text, done } = payload;
     setCaption({
       text,
@@ -396,7 +398,7 @@ const VideoFooter = (props: VideoFooterProps) => {
     });
   }, []);
 
-  const onCaptionDisable = useCallback((payload) => {
+  const onCaptionDisable = useCallback((payload: any) => {
     setIsDisableCaptions(payload);
     if (payload) {
       setIsStartedLiveTranscription(false);
@@ -428,7 +430,7 @@ const VideoFooter = (props: VideoFooterProps) => {
       liveStreamClient?.stopLiveStream();
     }
   }, [liveStreamStatus, liveStreamClient]);
-  const onLiveStreamStatusChange = useCallback((status) => {
+  const onLiveStreamStatusChange = useCallback((status: any) => {
     setLiveStreamStatus(status);
     if (status === LiveStreamStatus.Timeout) {
       message.error("Start live streaming timeout");

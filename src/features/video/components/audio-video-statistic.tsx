@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import MediaContext from "@/contexts/media-context";
 import ZoomContext from "@/contexts/zoom-context";
 import { AudioQosData, VideoQosData } from "@zoom/videosdk";
@@ -197,7 +199,7 @@ const AudioVideoStatisticModel = (props: AudioVideoStatisticModelProps) => {
     }
   };
 
-  const onAudioStatisticChange = useCallback((payload) => {
+  const onAudioStatisticChange = useCallback((payload: any) => {
     const {
       data: { encoding, ...restProps },
     } = payload;
@@ -212,7 +214,7 @@ const AudioVideoStatisticModel = (props: AudioVideoStatisticModelProps) => {
       }, 2000);
     }
   }, []);
-  const onVideoStatisticChange = useCallback((payload) => {
+  const onVideoStatisticChange = useCallback((payload: any) => {
     const {
       data: { encoding, ...restProps },
     } = payload;
@@ -227,7 +229,7 @@ const AudioVideoStatisticModel = (props: AudioVideoStatisticModelProps) => {
       }, 2000);
     }
   }, []);
-  const onShareStatisticChange = useCallback((payload) => {
+  const onShareStatisticChange = useCallback((payload: any) => {
     const {
       data: { encoding, ...restProps },
     } = payload;

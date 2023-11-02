@@ -1,7 +1,14 @@
-import _ from 'lodash';
-import { useState, useCallback, useRef, useEffect, MutableRefObject } from 'react';
-import { useSizeCallback, useMount } from '../../../hooks';
-import { MediaStream } from '../../../index-types';
+/* eslint-disable */
+import { MediaStream } from "@/lib/zoomVideoSdk";
+import _ from "lodash";
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useMount, useSizeCallback } from "../../../hooks";
 export function useCanvasDimension(
   mediaStream: MediaStream | null,
   videoRef: MutableRefObject<HTMLCanvasElement | null>
@@ -9,7 +16,7 @@ export function useCanvasDimension(
   const [dimension, setDimension] = useState({ width: 0, height: 0 });
   const debounceRef = useRef(_.debounce(setDimension, 300));
   const onCanvasResize = useCallback(
-    ({ width, height }) => {
+    ({ width, height }: any) => {
       if (videoRef) {
         // eslint-disable-next-line no-useless-call
         debounceRef.current({ width, height });
@@ -32,7 +39,11 @@ export function useCanvasDimension(
         videoRef.current.height = height;
       }
     } catch (e) {
-      mediaStream?.updateVideoCanvasDimension(videoRef.current as HTMLCanvasElement, width, height);
+      mediaStream?.updateVideoCanvasDimension(
+        videoRef.current as HTMLCanvasElement,
+        width,
+        height
+      );
     }
   }, [mediaStream, dimension, videoRef]);
   return dimension;

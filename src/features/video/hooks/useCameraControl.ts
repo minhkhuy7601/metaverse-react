@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { MediaStream, ZoomClient } from "@/lib/zoomVideoSdk";
 import { CameraControlCmd } from "@zoom/videosdk";
 import { Modal, message } from "antd";
@@ -33,7 +34,7 @@ export function useCameraControl(
       displayName,
       currentControllingUserId,
       currentControllingDisplayName,
-    }) => {
+    }: any) => {
       let message = `${displayName} request to control your camera?`;
       if (currentControllingUserId !== undefined) {
         message = `${displayName} want to take over the control of ${currentControllingDisplayName}?`;
@@ -56,7 +57,7 @@ export function useCameraControl(
     [mediaStream]
   );
   const onReceiveFarEndControlResponse = useCallback(
-    ({ isApproved, userId, displayName }) => {
+    ({ isApproved, userId, displayName }: any) => {
       dispatch({
         type: "set-is-controlling-remote-camera",
         payload: isApproved,
@@ -66,22 +67,25 @@ export function useCameraControl(
         message.info(`You can control ${displayName}'s camera now.`);
       } else {
         setCurrentControlledUser({ userId: 0, displayName: "" });
-        message.warn(`${displayName} rejected your control request.`);
+        message.warning(`${displayName} rejected your control request.`);
       }
     },
     [dispatch]
   );
 
-  const onCameraInControlChange = useCallback(({ isControlled, userId }) => {
-    if (isControlled) {
-      message.info("Your camera is controlled by other one");
-    } else {
-      message.info("You can control your camera now.");
-    }
-    setIsInControl(isControlled);
-    setControllingUserId(userId);
-  }, []);
-  const onCameraCapabilityChange = useCallback(({ userId, ptz }) => {
+  const onCameraInControlChange = useCallback(
+    ({ isControlled, userId }: any) => {
+      if (isControlled) {
+        message.info("Your camera is controlled by other one");
+      } else {
+        message.info("You can control your camera now.");
+      }
+      setIsInControl(isControlled);
+      setControllingUserId(userId);
+    },
+    []
+  );
+  const onCameraCapabilityChange = useCallback(({ userId, ptz }: any) => {
     setCameraCapability(
       produce((draft) => {
         const item = draft.find((i) => i.userId === userId);

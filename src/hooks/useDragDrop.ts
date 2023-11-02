@@ -1,14 +1,17 @@
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef, useState } from "react";
 type getDragPropsFn = (
-  data: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any
 ) => {
   key: string;
-  draggable: 'true';
+  draggable: "true";
   onDragStart: (e: React.DragEvent) => void;
   onDragEnd: (e: React.DragEvent) => void;
 };
 interface DragOption {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onDragStart?: (data: any, e: React.DragEvent) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onDragEnd?: (data: any, e: React.DragEvent) => void;
 }
 interface DropAreaState {
@@ -24,18 +27,19 @@ interface DropProps {
 interface DropAreaOptions {
   onFiles?: (files: File[], event?: React.DragEvent) => void;
   onUri?: (url: string, event?: React.DragEvent) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onDom?: (content: any, event?: React.DragEvent) => void;
   onText?: (text: string, event?: React.ClipboardEvent) => void;
 }
 export function useDrag(options: DragOption): getDragPropsFn {
   return (data) => ({
     key: JSON.stringify(data),
-    draggable: 'true',
+    draggable: "true",
     onDragStart: (e) => {
       if (options && options.onDragStart) {
         options.onDragStart(data, e);
       }
-      e.dataTransfer.setData('custom', JSON.stringify(data));
+      e.dataTransfer.setData("custom", JSON.stringify(data));
     },
     onDragEnd: (e) => {
       if (options && options.onDragEnd) {
@@ -50,9 +54,12 @@ export function useDrop(options: DropAreaOptions): [DropProps, DropAreaState] {
   optionsRef.current = options;
   const [isHover, setIsHover] = useState(false);
   const onDrop = useCallback(
-    (dataTransfer: DataTransfer, event: React.DragEvent | React.ClipboardEvent) => {
-      const uri = dataTransfer.getData('text/uri-list');
-      const dom = dataTransfer.getData('custom');
+    (
+      dataTransfer: DataTransfer,
+      event: React.DragEvent | React.ClipboardEvent
+    ) => {
+      const uri = dataTransfer.getData("text/uri-list");
+      const dom = dataTransfer.getData("custom");
       if (dom && optionsRef.current.onDom) {
         let data = dom;
         try {
@@ -70,7 +77,7 @@ export function useDrop(options: DropAreaOptions): [DropProps, DropAreaState] {
       ) {
         optionsRef.current.onFiles(
           Array.from(dataTransfer.files),
-          event as React.DragEvent,
+          event as React.DragEvent
         );
       } else if (
         dataTransfer.items &&
@@ -82,7 +89,7 @@ export function useDrop(options: DropAreaOptions): [DropProps, DropAreaState] {
         });
       }
     },
-    [],
+    []
   );
   const props = useMemo(
     () => ({
@@ -107,7 +114,7 @@ export function useDrop(options: DropAreaOptions): [DropProps, DropAreaState] {
         onDrop(event.clipboardData, event);
       },
     }),
-    [onDrop],
+    [onDrop]
   );
   return [props, { isHover }];
 }

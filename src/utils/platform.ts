@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export function getExploreName() {
   const { userAgent } = navigator;
   if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
