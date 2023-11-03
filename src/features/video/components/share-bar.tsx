@@ -154,7 +154,7 @@ const ShareBar = forwardRef((props: ShareBarProps, ref: any) => {
               />
             </Popconfirm>
           )}
-          <Button
+          {/* <Button
             icon={
               <IconFont
                 type={
@@ -165,9 +165,8 @@ const ShareBar = forwardRef((props: ShareBarProps, ref: any) => {
             className="share-bar-btn"
             ghost
             onClick={onSharePauseClick}
-          />
+          /> */}
           <Button
-            icon={<IconFont type="icon-stop" />}
             className="share-bar-btn"
             type="primary"
             danger

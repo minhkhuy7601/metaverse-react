@@ -1,6 +1,4 @@
-import { Button, Dropdown } from "antd";
-import { getAntdDropdownMenu, getAntdItem } from "./video-footer-utils";
-const { Button: DropdownButton } = Dropdown;
+import { Button } from "antd";
 interface LeaveButtonProps {
   onLeaveClick: () => void;
   onEndClick: () => void;
@@ -11,21 +9,32 @@ const LeaveButton = (props: LeaveButtonProps) => {
   const { onLeaveClick, onEndClick, isHost } = props;
 
   return isHost ? (
-    <Dropdown
-      className="!text-white"
-      menu={getAntdDropdownMenu(
-        [getAntdItem("End session", "end")],
-        onEndClick
-      )}
-      placement="topRight">
+    <>
       <Button
         size="large"
         className="!bg-red-500 !font-bold !text-white"
         onClick={onLeaveClick}>
-        End
+        Leave
       </Button>
-    </Dropdown>
+      <Button
+        size="large"
+        className="!bg-red-600 !font-bold !text-white ml-4"
+        onClick={onEndClick}>
+        End class
+      </Button>
+    </>
   ) : (
+    // <Dropdown
+    //   className="!text-white"
+    //   menu={getAntdDropdownMenu([getAntdItem("End class", "end")], onEndClick)}
+    //   placement="topRight">
+    //   <Button
+    //     size="large"
+    //     className="!bg-red-500 !font-bold !text-white"
+    //     onClick={onLeaveClick}>
+    //     Leave
+    //   </Button>
+    // </Dropdown>
     <Button
       className="!bg-red-500 !rounded-md !px-4 !font-bold"
       ghost={true}

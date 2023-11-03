@@ -2,6 +2,7 @@
 
 import ZoomMediaContext from "@/contexts/media-context";
 import ZoomContext from "@/contexts/zoom-context";
+import { setOpenMeeting } from "@/redux/slices/meetingRoomSlice";
 import { isAndroidOrIOSBrowser } from "@/utils/platform";
 import {
   AudioChangeAction,
@@ -18,6 +19,7 @@ import {
 import { message } from "antd";
 import classNames from "classnames";
 import { useCallback, useContext, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useMount, useUnmount } from "../../../hooks";
 import {
@@ -71,7 +73,7 @@ const VideoFooter = (props: VideoFooterProps) => {
 
   const zmClient = useContext(ZoomContext);
   const { mediaStream } = useContext(ZoomMediaContext);
-
+  const dispatch = useDispatch();
   const liveTranscriptionClient = zmClient.getLiveTranscriptionClient();
   const liveStreamClient = zmClient.getLiveStreamClient();
   const recordingClient = zmClient.getRecordingClient();
@@ -283,12 +285,12 @@ const VideoFooter = (props: VideoFooterProps) => {
 
   const onLeaveClick = useCallback(async () => {
     await zmClient.leave();
-    navigate("/");
+    dispatch(setOpenMeeting(false));
   }, [zmClient]);
 
   const onEndClick = useCallback(async () => {
     await zmClient.leave(true);
-    navigate("/");
+    dispatch(setOpenMeeting(false));
   }, [zmClient]);
 
   const onPassivelyStopShare = useCallback(({ reason }: any) => {

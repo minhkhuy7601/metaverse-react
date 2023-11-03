@@ -15,7 +15,7 @@ export function generateZoomJWT({
   roleType,
 }: generateZoomJWTType) {
   const iat = Math.round(new Date().getTime() / 1000);
-  const exp = iat + 60 * 60 * 2;
+  const exp = iat + 60 * 60 * 24;
 
   const oHeader = { alg: "HS256", typ: "JWT" };
   const sdkKey = import.meta.env.VITE_APP_FIREBASE_SDK_KEY;

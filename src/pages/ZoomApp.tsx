@@ -1,10 +1,11 @@
-import LoadingLayer from "@/components/zoomSdk/loading-layer";
+import ScreenLoading from "@/components/ScreenLoading";
 import ZoomMediaContext from "@/contexts/media-context";
 import zoomContext from "@/contexts/zoom-context";
 import Video from "@/features/video/video";
 import VideoNonSAB from "@/features/video/video-non-sab";
 import VideoSingle from "@/features/video/video-single";
 import { MediaStream } from "@/lib/zoomVideoSdk";
+import { setOpenMeeting } from "@/redux/slices/meetingRoomSlice";
 import ZoomVideo, { ConnectionState, ReconnectReason } from "@zoom/videosdk";
 import { produce } from "immer";
 import {
@@ -15,6 +16,7 @@ import {
   useReducer,
   useState,
 } from "react";
+import { useDispatch } from "react-redux";
 
 interface AppProps {
   meetingArgs: {
@@ -108,9 +110,11 @@ const ZoomApp = (props: AppProps) => {
   } = props;
   const [loading, setIsLoading] = useState(true);
   const [loadingText, setLoadingText] = useState("");
+  console.log("loadingText", loadingText);
   const [isFailover, setIsFailover] = useState<boolean>(false);
   const [status, setStatus] = useState<string>("closed");
   console.log("status", status);
+  const reduxDispatch = useDispatch();
   const [mediaState, dispatch] = useReducer(mediaReducer, mediaShape);
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const [isSupportGalleryView, setIsSupportGalleryView] =
@@ -134,7 +138,12 @@ const ZoomApp = (props: AppProps) => {
     const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
       // Handle the event logic here
       // You can call API methods or perform necessary actions before unloading the page
-      await zmClient.leave();
+      if (zmClient.isHost()) {
+        await zmClient.leave(true);
+      } else {
+        await zmClient.leave();
+      }
+
       event.preventDefault();
       // Optionally, return a message to display in the confirmation dialog
       event.returnValue = "Are you sure you want to leave?";
@@ -162,7 +171,6 @@ const ZoomApp = (props: AppProps) => {
           console.log(e);
         });
         const stream = zmClient.getMediaStream();
-        console.log("stream", stream);
         setMediaStream(stream);
         setIsSupportGalleryView(stream.isSupportMultipleVideos());
         setIsLoading(false);
@@ -216,6 +224,7 @@ const ZoomApp = (props: AppProps) => {
         console.log("getSessionInfo", zmClient.getSessionInfo());
       } else if (payload.state === ConnectionState.Closed) {
         setStatus("closed");
+        reduxDispatch(setOpenMeeting(false));
         dispatch({ type: "reset-media" });
         if (payload.reason === "ended by host") {
           //   Modal.warning({
@@ -276,7 +285,7 @@ const ZoomApp = (props: AppProps) => {
   console.log("galleryViewWithoutSAB", galleryViewWithoutSAB);
   return (
     <>
-      {loading && <LoadingLayer content={loadingText} />}
+      {loading && <ScreenLoading />}
       {!loading && (
         <ZoomMediaContext.Provider value={mediaContext}>
           {isSupportGalleryView ? (

@@ -1,11 +1,13 @@
-import { setOpenMeeting } from "@/redux/slices/meetingRoomSlice";
+import { useGamePlayContext } from "@/hooks/useGamePlayContext";
+import ZoomVideoSdk from "@/pages/ZoomVideoSdk";
 import { RootState } from "@/redux/store";
-import { JaaSMeeting } from "@jitsi/react-sdk";
-import { useDispatch, useSelector } from "react-redux";
-import ScreenLoading from "./ScreenLoading";
+import { generateZoomJWT } from "@/utils/generateZoomJWT";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
 
 const MeetingRoom = () => {
-  const dispatch = useDispatch();
+  const { currentPlayer } = useGamePlayContext();
+  console.log("currentPlayer", currentPlayer);
   const roomId = useSelector(
     (state: RootState) => state.meetingRoomSlice.roomId
   );
@@ -13,37 +15,28 @@ const MeetingRoom = () => {
     (state: RootState) => state.meetingRoomSlice.isOpenMeeting
   );
 
-  return (
-    <>
-      {isOpen && roomId && (
-        <>
-          <ScreenLoading />
-          <div
-            id="jitsi-meeting"
-            className="fixed top-0 left-0 w-screen h-screen z-50">
-            <JaaSMeeting
-              appId={import.meta.env.VITE_APP_JITSI_ID}
-              roomName={roomId as string}
-              // jwt={import.meta.env.VITE_APP_JITSI_JWT}
-              configOverwrite={{
-                disableThirdPartyRequests: true,
-                disableLocalVideoFlip: true,
-                //   backgroundAlpha: 0.5,
-              }}
-              interfaceConfigOverwrite={{
-                VIDEO_LAYOUT_FIT: "nocrop",
-                MOBILE_APP_PROMO: false,
-                TILE_VIEW_MAX_COLUMNS: 4,
-              }}
-              onReadyToClose={() => {
-                dispatch(setOpenMeeting(false));
-              }}
-            />
-          </div>
-        </>
-      )}
-    </>
+  const devConfig = useMemo(
+    () => ({
+      sdkKey: "",
+      sdkSecret: "",
+      webEndpoint: "zoom.us",
+      topic: roomId,
+      name: currentPlayer.name,
+      password: "",
+      signature: generateZoomJWT({
+        topic: roomId as string,
+        userIdentity: currentPlayer.name,
+        password: "",
+        roleType: 1,
+      }),
+      sessionKey: "",
+      userIdentity: "",
+      role: 1,
+    }),
+    [roomId, currentPlayer.name]
   );
+
+  return <>{isOpen && roomId && <ZoomVideoSdk devConfig={devConfig} />}</>;
 };
 
 export default MeetingRoom;
