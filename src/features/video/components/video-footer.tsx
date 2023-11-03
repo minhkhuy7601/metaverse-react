@@ -20,7 +20,6 @@ import { message } from "antd";
 import classNames from "classnames";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { useMount, useUnmount } from "../../../hooks";
 import {
   SELF_VIDEO_ID,
@@ -31,7 +30,6 @@ import AudioVideoStatisticModal from "./audio-video-statistic";
 import CameraButton from "./camera";
 import { LeaveButton } from "./leave";
 import MicrophoneButton from "./microphone";
-import { RecordButtonProps, getRecordingButtons } from "./recording";
 import IsoRecordingModal from "./recording-ask-modal";
 import { ScreenShareButton } from "./screen-share";
 import "./video-footer.scss";
@@ -44,7 +42,6 @@ interface VideoFooterProps {
 
 const isAudioEnable = typeof AudioWorklet === "function";
 const VideoFooter = (props: VideoFooterProps) => {
-  const navigate = useNavigate();
   const { className, selfShareCanvas, sharing } = props;
   const [isStartedAudio, setIsStartedAudio] = useState(false);
   const [isStartedVideo, setIsStartedVideo] = useState(false);
@@ -54,7 +51,9 @@ const VideoFooter = (props: VideoFooterProps) => {
   const [phoneCallStatus, setPhoneCallStatus] = useState<DialoutState>();
   const [isStartedLiveTranscription, setIsStartedLiveTranscription] =
     useState(false);
+  console.log("isStartedLiveTranscription", isStartedLiveTranscription);
   const [isDisableCaptions, setIsDisableCaptions] = useState(false);
+  console.log("isDisableCaptions", isDisableCaptions);
   const [isMirrored, setIsMirrored] = useState(false);
   const [isBlur, setIsBlur] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -69,24 +68,27 @@ const VideoFooter = (props: VideoFooterProps) => {
   const [isComputerAudioDisabled, setIsComputerAudioDisabled] = useState(false);
   const [sharePrivilege, setSharePrivileg] = useState(SharePrivilege.Unlocked);
   const [caption, setCaption] = useState({ text: "", isOver: false });
+  console.log("caption", caption);
   const [activePlaybackUrl, setActivePlaybackUrl] = useState("");
 
   const zmClient = useContext(ZoomContext);
   const { mediaStream } = useContext(ZoomMediaContext);
   const dispatch = useDispatch();
-  const liveTranscriptionClient = zmClient.getLiveTranscriptionClient();
+  // const liveTranscriptionClient = zmClient.getLiveTranscriptionClient();
   const liveStreamClient = zmClient.getLiveStreamClient();
   const recordingClient = zmClient.getRecordingClient();
   const [recordingStatus, setRecordingStatus] = useState<"" | RecordingStatus>(
     recordingClient?.getCloudRecordingStatus() || ""
   );
+  console.log("recordingStatus", recordingStatus);
   const [recordingIsoStatus, setRecordingIsoStatus] = useState<
     "" | RecordingStatus
   >("");
-  const [liveStreamVisible, setLiveStreamVisible] = useState(false);
+  // const [liveStreamVisible, setLiveStreamVisible] = useState(false);
   const [liveStreamStatus, setLiveStreamStatus] = useState(
     liveStreamClient?.getLiveStreamStatus()
   );
+  console.log("liveStreamStatus", liveStreamStatus);
   // Video Mask
   const [videoMaskVisible, setVideoMaskVisible] = useState(false);
 
@@ -258,30 +260,30 @@ const VideoFooter = (props: VideoFooterProps) => {
     }
   }, [mediaStream, selfShareCanvas]);
 
-  const onLiveTranscriptionClick = useCallback(async () => {
-    if (isDisableCaptions) {
-      message.info("Captions has been disable by host.");
-    } else if (isStartedLiveTranscription) {
-      message.info("Live transcription has started.");
-    } else if (!isStartedLiveTranscription) {
-      await liveTranscriptionClient?.startLiveTranscription();
-      setIsStartedLiveTranscription(true);
-    }
-  }, [isStartedLiveTranscription, isDisableCaptions, liveTranscriptionClient]);
+  // const onLiveTranscriptionClick = useCallback(async () => {
+  //   if (isDisableCaptions) {
+  //     message.info("Captions has been disable by host.");
+  //   } else if (isStartedLiveTranscription) {
+  //     message.info("Live transcription has started.");
+  //   } else if (!isStartedLiveTranscription) {
+  //     await liveTranscriptionClient?.startLiveTranscription();
+  //     setIsStartedLiveTranscription(true);
+  //   }
+  // }, [isStartedLiveTranscription, isDisableCaptions, liveTranscriptionClient]);
 
-  const onDisableCaptions = useCallback(
-    async (disable: boolean) => {
-      if (disable && !isDisableCaptions) {
-        await liveTranscriptionClient?.disableCaptions(disable);
-        setIsStartedLiveTranscription(false);
-        setIsDisableCaptions(true);
-      } else if (!disable && isDisableCaptions) {
-        await liveTranscriptionClient?.disableCaptions(disable);
-        setIsDisableCaptions(false);
-      }
-    },
-    [isDisableCaptions, liveTranscriptionClient]
-  );
+  // const onDisableCaptions = useCallback(
+  //   async (disable: boolean) => {
+  //     if (disable && !isDisableCaptions) {
+  //       await liveTranscriptionClient?.disableCaptions(disable);
+  //       setIsStartedLiveTranscription(false);
+  //       setIsDisableCaptions(true);
+  //     } else if (!disable && isDisableCaptions) {
+  //       await liveTranscriptionClient?.disableCaptions(disable);
+  //       setIsDisableCaptions(false);
+  //     }
+  //   },
+  //   [isDisableCaptions, liveTranscriptionClient]
+  // );
 
   const onLeaveClick = useCallback(async () => {
     await zmClient.leave();
@@ -421,13 +423,13 @@ const VideoFooter = (props: VideoFooterProps) => {
     [isStartedAudio, activePlaybackUrl, mediaStream]
   );
 
-  const onLiveStreamClick = useCallback(() => {
-    if (liveStreamStatus === LiveStreamStatus.Ended) {
-      setLiveStreamVisible(true);
-    } else if (liveStreamStatus === LiveStreamStatus.InProgress) {
-      liveStreamClient?.stopLiveStream();
-    }
-  }, [liveStreamStatus, liveStreamClient]);
+  // const onLiveStreamClick = useCallback(() => {
+  //   if (liveStreamStatus === LiveStreamStatus.Ended) {
+  //     setLiveStreamVisible(true);
+  //   } else if (liveStreamStatus === LiveStreamStatus.InProgress) {
+  //     liveStreamClient?.stopLiveStream();
+  //   }
+  // }, [liveStreamStatus, liveStreamClient]);
   const onLiveStreamStatusChange = useCallback((status: any) => {
     setLiveStreamStatus(status);
     if (status === LiveStreamStatus.Timeout) {
@@ -518,10 +520,10 @@ const VideoFooter = (props: VideoFooterProps) => {
       }
     };
   }, [mediaStream, zmClient]);
-  const recordingButtons: RecordButtonProps[] = getRecordingButtons(
-    recordingStatus,
-    zmClient.isHost()
-  );
+  // const recordingButtons: RecordButtonProps[] = getRecordingButtons(
+  //   recordingStatus,
+  //   zmClient.isHost()
+  // );
   return (
     <div
       className={classNames(

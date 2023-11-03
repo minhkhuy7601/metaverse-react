@@ -1,13 +1,11 @@
 /* eslint-disable */
 
-import { CheckOutlined, LockOutlined, UnlockOutlined } from "@ant-design/icons";
+import { LockOutlined, UnlockOutlined } from "@ant-design/icons";
 import { SharePrivilege } from "@zoom/videosdk";
-import { Button, Dropdown, Tooltip } from "antd";
+import { Button, Tooltip } from "antd";
 import classNames from "classnames";
 import { IoShareOutline } from "react-icons/io5";
-import { getAntdItem } from "./video-footer-utils";
 
-const { Button: DropdownButton } = Dropdown;
 interface ScreenShareButtonProps {
   sharePrivilege: SharePrivilege;
   isHostOrManager: boolean;
@@ -21,32 +19,27 @@ interface ScreenShareLockButtonProps {
 }
 
 const ScreenShareButton = (props: ScreenShareButtonProps) => {
-  const {
-    sharePrivilege,
-    isHostOrManager,
-    onScreenShareClick,
-    onSharePrivilegeClick,
-  } = props;
-  const menu = [
-    getAntdItem(
-      "Lock share",
-      `${SharePrivilege.Locked}`,
-      sharePrivilege === SharePrivilege.Locked && <CheckOutlined />
-    ),
-    getAntdItem(
-      "One participant can share at a time",
-      `${SharePrivilege.Unlocked}`,
-      sharePrivilege === SharePrivilege.Unlocked && <CheckOutlined />
-    ),
-    getAntdItem(
-      "Multiple participants can share simultaneously",
-      `${SharePrivilege.MultipleShare}`,
-      sharePrivilege === SharePrivilege.MultipleShare && <CheckOutlined />
-    ),
-  ];
-  const onMenuItemClick = (payload: { key: any }) => {
-    onSharePrivilegeClick?.(Number(payload.key));
-  };
+  const { onScreenShareClick } = props;
+  // const menu = [
+  //   getAntdItem(
+  //     "Lock share",
+  //     `${SharePrivilege.Locked}`,
+  //     sharePrivilege === SharePrivilege.Locked && <CheckOutlined />
+  //   ),
+  //   getAntdItem(
+  //     "One participant can share at a time",
+  //     `${SharePrivilege.Unlocked}`,
+  //     sharePrivilege === SharePrivilege.Unlocked && <CheckOutlined />
+  //   ),
+  //   getAntdItem(
+  //     "Multiple participants can share simultaneously",
+  //     `${SharePrivilege.MultipleShare}`,
+  //     sharePrivilege === SharePrivilege.MultipleShare && <CheckOutlined />
+  //   ),
+  // ];
+  // const onMenuItemClick = (payload: { key: any }) => {
+  //   onSharePrivilegeClick?.(Number(payload.key));
+  // };
   return (
     <>
       {/* {isHostOrManager ? (

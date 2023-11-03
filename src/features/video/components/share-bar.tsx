@@ -53,13 +53,13 @@ const ShareBar = forwardRef((props: ShareBarProps, ref: any) => {
     }
   }, [mediaStream, shareAudioStatus]);
 
-  const onSharePauseClick = useCallback(() => {
-    if (status === ShareStatus.Paused) {
-      mediaStream?.resumeShareScreen();
-    } else if (status === ShareStatus.Sharing) {
-      mediaStream?.pauseShareScreen();
-    }
-  }, [mediaStream, status]);
+  // const onSharePauseClick = useCallback(() => {
+  //   if (status === ShareStatus.Paused) {
+  //     mediaStream?.resumeShareScreen();
+  //   } else if (status === ShareStatus.Sharing) {
+  //     mediaStream?.pauseShareScreen();
+  //   }
+  // }, [mediaStream, status]);
   const onShareStatusChange = useCallback(() => {
     if (status !== mediaStream?.getShareStatus()) {
       setStatus(mediaStream?.getShareStatus());
